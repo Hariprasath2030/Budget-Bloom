@@ -9,17 +9,18 @@ function Header() {
   const {isSignedIn} = useUser();
   return (
     <div className='p-5 flex justify-between items-center border shadow-md'>
-      <div className='text-2xl font-serif font-bold'>Expense Tracker</div>
        <Image src ={img}
        alt = 'logo'
-       width = {100}
-       height = {100}
+       left = {50}
+       width = {50}
+       height = {50}
        className = 'rounded-full'
        />
+      <div className='text-2xl font-serif font-bold align-text-bottom'>Expense Tracker</div>
        {isSignedIn?
        <UserButton/> : 
        <Link href ={'/sign-in'}>
-        <Button>Get Started</Button>
+        <Button>Login in</Button>
       </Link>
        }
     </div>
