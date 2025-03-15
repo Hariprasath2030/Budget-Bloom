@@ -41,7 +41,7 @@ export default function Page() {
        </div>
      </div>
      <div className="flex justify-center w-full lg:w-1/3 mt-10 lg:mt-0">
-     <SignUp/>
+     <SignUp routing="hash" />
      </div>
    </div>
  </section>
