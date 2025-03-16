@@ -38,7 +38,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="mt-12 ltr:ml-auto rtl:mr-auto">
+        <div className="mt-1 ltr:ml-auto rtl:mr-auto">
         <SignUp routing="hash" />
        </div>
       </div>
