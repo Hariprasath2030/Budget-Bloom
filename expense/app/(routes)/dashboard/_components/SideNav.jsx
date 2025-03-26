@@ -19,7 +19,7 @@ function SideNav() {
             id:2,
             name:'Budget',
             icon:PiggyBank,
-            path:'/dashboard/budget'
+            path:'/dashboard/budgets'
         },
         {
             id:3,   
@@ -54,10 +54,7 @@ function SideNav() {
         </Link>
 ))}
     </div>
-    <div className='fixed bottom-10 p-5 flex gap-2 items-center'>
-        <UserButton/>
-        Profile
-    </div>
+ 
     </div>
   )
 }
