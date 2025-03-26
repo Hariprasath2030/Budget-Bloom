@@ -12,6 +12,11 @@ export default function Page() {
           layout="fill"
           objectFit="cover"
           quality={100}
+          priority={true}
+          className="object-cover"
+          loading="eager"
+          style={{filter: "blur(8px)", height: "100%"}}
+          placeholder="blur"
         />
       </div>
 
