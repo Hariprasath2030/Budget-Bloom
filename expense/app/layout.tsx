@@ -1,6 +1,7 @@
 import { Oxanium } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "../@/components/ui/sonner"
 
 const oxanium = Oxanium({
   subsets: ["latin"],
@@ -16,8 +17,8 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
     <html lang="en">
       <body
-        className={oxanium.variable}
-      >
+        className={oxanium.variable}>
+           <Toaster />
         {children}
       </body>
     </html>
