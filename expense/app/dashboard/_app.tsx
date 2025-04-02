@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import { AppProps } from 'next/app';
-import { ThemeProvider } from 'next-themes';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -18,9 +17,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
-       <ThemeProvider>
+
       <Component {...pageProps} />
-       </ThemeProvider>
     </ClerkProvider>
   );
 }
