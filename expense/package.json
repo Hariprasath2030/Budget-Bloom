@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "start": "next start",
+    "vercel-build": "next build",
     "lint": "next lint",
     "db:push": "npx drizzle-kit push",
     "db:studio": "npx drizzle-kit studio"
