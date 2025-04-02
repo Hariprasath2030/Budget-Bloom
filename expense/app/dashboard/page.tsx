@@ -1,11 +1,39 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Menu, X } from "lucide-react"; // Added X for close icon
 import DashboardHeader from '../dashboard/_components/DashboardHeader'; // Corrected typo
-
+import { useUser } from "@clerk/nextjs";
+import CardInfo from '../dashboard/_components/CardInfo';
+import { Budgets, Expenses } from "../../utils/schema";
+import { desc, eq, getTableColumns, sql } from "drizzle-orm";
+import { db } from "../../utils/dbConfig";
 function SideNav() {
+  const { user } = useUser();
+
+  const [budgetList, setBudgetList] = useState([]);
+  useEffect(() => {
+    user && getBudgetList();
+  }, [user])
+
+  const getBudgetList = async () => {
+
+    const result = await db.select({
+      ...getTableColumns(Budgets),
+      totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
+      totalItem: sql`count(${Expenses.id})`.mapWith(Number)
+    }).from(Budgets)
+      .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
+      .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
+      .groupBy(Budgets.id)
+      .orderBy(desc(Budgets.id));
+
+    setBudgetList(result);
+  }
+
+
+
   const [isSidebarOpen, setSidebarOpen] = useState(false); // State for sidebar toggle
   const menuList = [
     { name: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
@@ -52,9 +80,8 @@ function SideNav() {
             <li key={link.name}>
               <Link href={link.href} className="block">
                 <div
-                  className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${
-                    path === link.href ? "text-primary bg-blue-100" : ""
-                  }`}
+                  className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-primary bg-blue-100" : ""
+                    }`}
                 >
                   <link.icon size={24} />
                   <span>{link.name}</span>
@@ -67,9 +94,8 @@ function SideNav() {
 
       {/* Sidebar for Mobile (Toggle visibility on hamburger click) */}
       <div
-        className={`lg:hidden h-screen p-5 border shadow-sm w-64 bg-white fixed top-0 left-0 transition-transform duration-300 ${
-          isSidebarOpen ? "transform translate-x-0" : "transform -translate-x-full"
-        }`}
+        className={`lg:hidden h-screen p-5 border shadow-sm w-64 bg-white fixed top-0 left-0 transition-transform duration-300 ${isSidebarOpen ? "transform translate-x-0" : "transform -translate-x-full"
+          }`}
       >
         {/* Close button inside the sidebar */}
         <div className="absolute top-25 right-4">
@@ -83,9 +109,8 @@ function SideNav() {
             <li key={link.name}>
               <Link href={link.href} className="block">
                 <div
-                  className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${
-                    path === link.href ? "text-primary bg-blue-100" : ""
-                  }`}
+                  className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-primary bg-blue-100" : ""
+                    }`}
                 >
                   <link.icon size={24} />
                   <span>{link.name}</span>
@@ -94,6 +119,11 @@ function SideNav() {
             </li>
           ))}
         </ul>
+      </div>
+      <div className='p-5'>
+        <h2 className="font-bold text-3xl justify-center">Hi, {user?.fullName}</h2>
+        <p className="text-gray-500">Welcome to your dashboard!</p>
+        <CardInfo budgetList={budgetList} />
       </div>
     </>
   );

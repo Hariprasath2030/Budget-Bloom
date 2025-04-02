@@ -1,20 +1,96 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Menu, X } from 'lucide-react'; // Added X for close icon
+import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Menu, X, Trash, ArrowLeft, PenBox } from 'lucide-react'; // Added X for close icon
 import DashboardHeader from '../../../dashboard/_components/DashboardHeader';  // Assuming DashboardHeader is inside _components folder
-import { desc, eq, getTableColumns, sql } from 'drizzle-orm'
+import { and, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { Budgets, Expenses } from '../../../../utils/schema'
 import { db } from '../../../../utils/dbConfig'
+import { useUser } from '@clerk/nextjs';
+import BudgetItem from '../../budgets/_components/BudgetItem';
+import AddExpense from './_components/AddExpense';
+import ExpenseListTable from './_components/ExpenseListTable';
+import { Button } from '../../../../components/ui/button';
+import EditBudget from './_components/EditBudget';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../../../@/components/ui/alert-dialog"
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 
-export default function Expenses({ params }) {
-    const { user }
+export default function ExpensesScreen({ params }) {
+    const { user } = useUser();
+    const [budgetInfo, setBudgetInfo] = useState(null);
+    const [expensesList, setExpensesList] = useState([]);
+    const route = useRouter();
+    // ✅ Unwrap params using React.use()
+    const resolvedParams = params;
+    // This ensures `params` is properly resolved before use.
+
     useEffect(() => {
-        console.log("Params:", params);
-        getBudgetInfo();
-    }, [params]);
+        if (user) {
+            getBudgetInfo();
+        }
+    }, [user, resolvedParams]); // ✅ Depend on resolvedParams
+
+    const getBudgetInfo = async () => {
+        if (!resolvedParams?.id) return; // ✅ Prevent errors if params are still loading
+
+        const result = await db
+            .select({
+                ...getTableColumns(Budgets),
+                totalSpend: sql`SUM(${Expenses.amount})`.mapWith(Number),
+                totalItem: sql`COUNT(${Expenses.id})`.mapWith(Number),
+            })
+            .from(Budgets)
+            .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
+            .where(
+                and(
+                    eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress),
+                    eq(Budgets.id, resolvedParams.id) // ✅ Use unwrapped params
+                )
+            )
+            .groupBy(...Object.values(getTableColumns(Budgets)));
+
+        setBudgetInfo(result[0]);
+        getExpeneslist();
+
+    };
+
+    const getExpeneslist = async () => {
+        const result = await db.select().from(Expenses)
+            .where(eq(Expenses.budgetId, resolvedParams.id))
+            .orderBy(desc(Expenses.id));
+        setExpensesList(result);
+        console.log(result)
+
+    }
+
+    const deleteBudget = async () => {
+
+        const deleteExpenseResult = await db.delete(Expenses)
+            .where(eq(Expenses.budgetId, resolvedParams.id))
+            .returning()
+
+        if (deleteExpenseResult) {
+            const result = await db.delete(Budgets)
+                .where(eq(Budgets.id, resolvedParams.id))
+                .returning();
+        }
+        toast("Budget deleted successfully")
+        route.replace('/dashboard/budgets')
+    }
+
     const [isSidebarOpen, setSidebarOpen] = useState(false); // State for sidebar toggle
     const menuList = [
         { name: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
@@ -35,18 +111,7 @@ export default function Expenses({ params }) {
     const handleCloseSidebar = () => {
         setSidebarOpen(false);
     };
-    const getBudgetInfo = async () => {
-        const result = await db.select({
-            ...getTableColumns(Budgets),
-            totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
-            totalItem: sql`count(${Expenses.id})`.mapWith(Number)
-        }).from(Budgets)
-            .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
-            .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
-            .where(eq(Budgets.id, params.id))
-            .orderBy(desc(Budgets.id));
 
-    }
 
     return (
         <>
@@ -114,8 +179,62 @@ export default function Expenses({ params }) {
                     </ul>
                 </div>
                 {/* Page Content */}
-                <div className="p-10">
-                    <h2 className="font-bold text-3xl">My Expense</h2>
+                <div className="p-10 w-full">
+                    <h2 className="font-bold text-3xl flex justify-between items-center">
+                        <span className='flex gap-2 items-center'>
+                            <ArrowLeft onClick={() => route.back()} className='cursor-pointer'>
+
+                                My Expenses
+                            </ArrowLeft>
+                        </span>
+                        <div className='flex gap-2 items-center'>
+
+                       <EditBudget 
+                       budgetInfo={budgetInfo}
+                       refreshData={() => getBudgetInfo()}
+                       />
+
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button className="flex gap-2" variant="destructive" size="sm">
+                                    <Trash />delete</Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your current budget along with all its expenses.
+                                        and remove your data from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => deleteBudget()}>Continue</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                        </div>
+                    </h2>
+                    <br></br>
+                    <div className="grid grid-cols-1 md:grid-cols-2 mt-6 gap-5">
+                        {budgetInfo ? (
+                            <BudgetItem budget={budgetInfo} />
+                        ) : (
+                            <div className="h-[150px] w-full bg-slate-200 rounded-lg animate-bounce"></div>
+                        )}
+                        <AddExpense budgetId={resolvedParams.id}
+                            user={user}
+                            refreshData={() => getBudgetInfo()}
+                        /> {/* ✅ Pass unwrapped params */}
+                    </div>
+                    <div className='mt-4'>
+                        <h2 className='font-bold text-lg'>Latest Expenses</h2>
+                        <ExpenseListTable
+                            expensesList={expensesList}
+                            refreshData={() => getBudgetInfo()}
+
+                        />
+                    </div>
                 </div>
             </div>
         </>
