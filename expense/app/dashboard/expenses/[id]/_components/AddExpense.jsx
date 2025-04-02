@@ -7,12 +7,14 @@ import { db } from '../../../../../utils/dbConfig';
 import { Budgets, Expenses } from '../../../../../utils/schema';
 import { toast } from 'sonner';
 import moment from 'moment';
+import { Loader } from 'lucide-react';
 function AddExpense({ budgetId, user, refreshData }) {
 
-    const [name, setName] = useState('');
-    const [amount, setAmount] = useState('');
-
+    const [name, setName] = useState();
+    const [amount, setAmount] = useState();
+    const [loading, setLoading] = useState(false);
     const addNewExpenses = async () => {
+        setLoading(true)
         if (!user) {
             toast.error("User not found! Please log in.");
             return;
@@ -31,15 +33,15 @@ function AddExpense({ budgetId, user, refreshData }) {
                 budgetId: parsedBudgetId, // ✅ Corrected budgetId 
                 createdAt: moment().format('DD/MM/yyy') // ✅ Store current timestamp
             }).returning({ insertedId: Expenses.id });
-
-            console.log(result);
-
+            
+            setAmount('');
+            setName('');
             if (result.length > 0) {
+                setLoading(false)
                 refreshData();
                 toast("New Expense Added!");
-                setName("");
-                setAmount("");
             }
+            setLoading(false) 
         } catch (error) {
             console.error("Error adding expense:", error);
             toast.error("Failed to add expense. Try again!");
@@ -66,9 +68,13 @@ function AddExpense({ budgetId, user, refreshData }) {
                 />
             </div>
             <Button
-                disabled={!(name && amount)}
+                disabled={!(name && amount) || loading}
                 onClick={() => addNewExpenses()}
-                className="mt-3 w-full">Add New Expense</Button>
+                className="mt-3 w-full">
+                    {loading ?
+                    <Loader className="animate-spin"/>: "Add New Expense"
+                    }
+                </Button>
         </div>
     )
 }

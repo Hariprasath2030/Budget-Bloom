@@ -25,7 +25,8 @@ function ExpenseListTable({expensesList,refreshData}) {
   return (
     <div>
       <div className='mt-3'>
-        <div className='grid grid-cols-4 bg-slate-400 p-2'>
+      <h2 className='font-bold text-lg'>Latest Expenses</h2>
+        <div className='grid grid-cols-4 bg-slate-400 p-2 mt-3 gap-3'>
         <h2>Name</h2>
         <h2>Amount</h2>
         <h2>Date</h2>
@@ -33,7 +34,7 @@ function ExpenseListTable({expensesList,refreshData}) {
         </div>
           {expensesList.map((expense, index) => (
             <div className='grid grid-cols-4 bg-slate-100 p-2'>
-              <h2 className='font-bold'>{expense.name}</h2>
+              <h2 className='font-bold items'>{expense.name}</h2>
               <h2 className='font-bold'>{expense.amount}</h2>
               <h2 className='font-bold'>{expense.createdAt}</h2>
               <h2>

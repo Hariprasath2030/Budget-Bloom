@@ -183,9 +183,8 @@ export default function ExpensesScreen({ params }) {
                     <h2 className="font-bold text-3xl flex justify-between items-center">
                         <span className='flex gap-2 items-center'>
                             <ArrowLeft onClick={() => route.back()} className='cursor-pointer'>
-
-                                My Expenses
                             </ArrowLeft>
+                            My Expense
                         </span>
                         <div className='flex gap-2 items-center'>
 
@@ -228,7 +227,6 @@ export default function ExpensesScreen({ params }) {
                         /> {/* ✅ Pass unwrapped params */}
                     </div>
                     <div className='mt-4'>
-                        <h2 className='font-bold text-lg'>Latest Expenses</h2>
                         <ExpenseListTable
                             expensesList={expensesList}
                             refreshData={() => getBudgetInfo()}
