@@ -1,9 +1,19 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export default clerkMiddleware({
-  publicRoutes: ["/sign-in", "/sign-up"],  // Ensure these routes are public
-  ignoredRoutes: ["/api/webhook(.*)"],
-});
+const clerkMiddlewareInstance = clerkMiddleware();
+
+export default function middleware(req, res, next) {
+  const publicPaths = ["/sign-in", "/sign-up"];
+  const { pathname } = req.nextUrl;
+
+  if (publicPaths.includes(pathname)) {
+    // Allow public routes to proceed without authentication
+    return next();
+  } else {
+    // Use Clerk's middleware for other routes
+    return clerkMiddlewareInstance(req, res);
+  }
+}
 
 export const config = {
   matcher: [

@@ -3,8 +3,10 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "../@/components/ui/sonner"
 
+
 const oxanium = Oxanium({
-  subsets: ["latin"],
+  subsets: ['latin'],
+  variable: '--font-oxanium', // ✅ Add this line
 });
 
 export const metadata = {

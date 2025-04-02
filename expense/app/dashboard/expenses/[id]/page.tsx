@@ -198,17 +198,17 @@ export default function ExpensesScreen({ params }) {
                                 <Button className="flex gap-2" variant="destructive" size="sm">
                                     <Trash />delete</Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription>
+                            <AlertDialogContent className={undefined}>
+                                <AlertDialogHeader className={undefined}>
+                                    <AlertDialogTitle className={undefined}>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription className={undefined}>
                                         This action cannot be undone. This will permanently delete your current budget along with all its expenses.
                                         and remove your data from our servers.
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => deleteBudget()}>Continue</AlertDialogAction>
+                                <AlertDialogFooter className={undefined}>
+                                    <AlertDialogCancel className={undefined}>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => deleteBudget()} className={undefined}>Continue</AlertDialogAction>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
