@@ -9,4 +9,4 @@ export default defineConfig({
     url: process.env.NEXT_PUBLIC_DATABASE_URL,
   },
 });
- 
+
