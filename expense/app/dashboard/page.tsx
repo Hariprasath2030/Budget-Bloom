@@ -37,7 +37,7 @@ function SideNav() {
     setBudgetList(result);
     getAllExpenses();
   }
-   
+
   const getAllExpenses = async () => {
     const result = await db.select({
       id: Expenses.id,
@@ -45,20 +45,17 @@ function SideNav() {
       amount: Expenses.amount,
       createdAt: Expenses.createdAt
     }).from(Budgets)
-    .rightJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
-    .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
-    .orderBy(desc(Expenses.id));
+      .rightJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
+      .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
+      .orderBy(desc(Expenses.id));
     setExpensesList(result);
 
   }
-
-
-
   const [isSidebarOpen, setSidebarOpen] = useState(false); // State for sidebar toggle
   const menuList = [
     { name: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
     { name: "Budget", icon: PiggyBank, href: "/dashboard/budgets" },
-    { name: "Expenses", icon: ReceiptText, href: "/dashboard/expenses" },
+    { name: "Expenses", icon: ReceiptText, href: "/dashboard/expensesdashboard" },
     { name: "Upgrade", icon: ShieldCheck, href: "/dashboard/upgrade" },
   ];
 
@@ -153,21 +150,21 @@ function SideNav() {
                   budgetList={budgetList} />
 
                 <ExpenseListTable
-                expensesList={expensesList}
-                refreshData={()=>getBudgetList()}
+                  expensesList={expensesList}
+                  refreshData={() => getBudgetList()}
                 />
               </div>
               <div className="grid gap-5">
                 <h2 className="font-bold text-3xl">Latest Budgets</h2>
-               {budgetList.map((budget,index)=>(
-               <BudgetItem budget={budget} key={index}/>
-              ))}
+                {budgetList.map((budget, index) => (
+                  <BudgetItem budget={budget} key={index} />
+                ))}
               </div>
             </div>
           </div>
         </div>
-        </div>
-      
+      </div>
+
 
     </>
   );

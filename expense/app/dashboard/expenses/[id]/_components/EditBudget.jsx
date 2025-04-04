@@ -21,7 +21,7 @@ import { eq } from 'drizzle-orm';
 import { Budgets } from '../../../../../utils/schema';
 import { toast } from 'sonner';
 
-function EditBudget({budgetInfo, refreshData}) {
+function EditBudget({ budgetInfo, refreshData }) {
     const [emojiIcon, setEmojiIcon] = useState(budgetInfo?.icon);
     const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
     const [name, setName] = useState(budgetInfo?.name);
@@ -30,13 +30,12 @@ function EditBudget({budgetInfo, refreshData}) {
     const { user } = useUser();
 
     useEffect(() => {
-        if(budgetInfo)
-        {
+        if (budgetInfo) {
             setEmojiIcon(budgetInfo?.icon);
             setName(budgetInfo?.name);
             setAmount(budgetInfo?.amount);
         }
-    },[budgetInfo])
+    }, [budgetInfo])
 
     const onUpdateBudget = async () => {
         const result = await db.update(Budgets).set({
@@ -44,24 +43,22 @@ function EditBudget({budgetInfo, refreshData}) {
             amount: amount,
             icon: emojiIcon,
         }).where(eq(Budgets.id, budgetInfo.id))
-        .returning();
+            .returning();
 
-        if(result.length > 0)
-            {
-                refreshData();
-                toast.success("Budget updated successfully");
-            }
-        else
-            {   
-                toast.error("Error updating budget");
-            }
+        if (result.length > 0) {
+            refreshData();
+            toast.success("Budget updated successfully");
+        }
+        else {
+            toast.error("Error updating budget");
+        }
 
     }
 
     return (
         <div>
             <Dialog>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                     <Button className="flex gap-2"> <PenBox />Edit</Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -110,7 +107,7 @@ function EditBudget({budgetInfo, refreshData}) {
                         <DialogClose asChild>
                             <Button
                                 disabled={!(name && amount)}
-                                onClick={()=>onUpdateBudget()}
+                                onClick={() => onUpdateBudget()}
                                 className="w-full mt-5"
                             >
                                 Update Budget

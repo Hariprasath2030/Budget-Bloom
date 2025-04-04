@@ -1,8 +1,8 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
 export default clerkMiddleware({
-  publicRoutes: ["/sign-in", "/sign-up"],  // Ensure these routes are public
-  ignoredRoutes: ["/api/webhook(.*)"],
+  publicRoutes: ["/sign-in", "/sign-up"], // Publicly accessible routes
+  ignoredRoutes: ["/api/webhook(.*)"],   // Routes to ignore
 });
 
 export const config = {

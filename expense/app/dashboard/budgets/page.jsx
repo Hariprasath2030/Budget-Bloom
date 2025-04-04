@@ -8,12 +8,12 @@ import BudgetList from './_components/BudgetList';  // Importing BudgetList comp
 import { useRouter } from 'next/navigation';
 
 export default function Budgets() {
-  const [isSidebarOpen, setSidebarOpen] = useState(false); 
-   const route = useRouter();// State for sidebar toggle
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const route = useRouter();// State for sidebar toggle
   const menuList = [
     { name: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
     { name: "Budget", icon: PiggyBank, href: "/dashboard/budgets" },
-    { name: "Expenses", icon: ReceiptText, href: "/dashboard/expenses" },
+    { name: "Expenses", icon: ReceiptText, href: "/dashboard/expensesdashboard" },
     { name: "Upgrade", icon: ShieldCheck, href: "/dashboard/upgrade" },
   ];
 
@@ -98,11 +98,11 @@ export default function Budgets() {
         {/* Page Content */}
         <div className="p-10 w-full">
           <h2 className="font-bold text-3xl">
-          <span className='flex gap-2 items-center'>
-            <ArrowLeft onClick={() => route.back()} className='cursor-pointer'>
-            </ArrowLeft>
-          Budgets
-          </span>
+            <span className='flex gap-2 items-center'>
+              <ArrowLeft onClick={() => route.back()} className='cursor-pointer'>
+              </ArrowLeft>
+              Budgets
+            </span>
           </h2>
           {/* BudgetList Component */}
           <BudgetList />

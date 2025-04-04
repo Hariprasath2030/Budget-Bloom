@@ -33,8 +33,7 @@ export default function ExpensesScreen({ params }) {
     const [budgetInfo, setBudgetInfo] = useState(null);
     const [expensesList, setExpensesList] = useState([]);
     const route = useRouter();
-    // ✅ Unwrap params using React.use()
-    const resolvedParams = params;
+    const resolvedParams = use(params);
     // This ensures `params` is properly resolved before use.
 
     useEffect(() => {
@@ -95,7 +94,7 @@ export default function ExpensesScreen({ params }) {
     const menuList = [
         { name: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
         { name: "Budget", icon: PiggyBank, href: "/dashboard/budgets" },
-        { name: "Expenses", icon: ReceiptText, href: "/dashboard/expenses" },
+        { name: "Expenses", icon: ReceiptText, href: "/dashboard/expensesdashboard" },
         { name: "Upgrade", icon: ShieldCheck, href: "/dashboard/upgrade" },
     ];
 
@@ -188,30 +187,30 @@ export default function ExpensesScreen({ params }) {
                         </span>
                         <div className='flex gap-2 items-center'>
 
-                       <EditBudget 
-                       budgetInfo={budgetInfo}
-                       refreshData={() => getBudgetInfo()}
-                       />
+                            <EditBudget
+                                budgetInfo={budgetInfo}
+                                refreshData={() => getBudgetInfo()}
+                            />
 
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button className="flex gap-2" variant="destructive" size="sm">
-                                    <Trash />delete</Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent className={undefined}>
-                                <AlertDialogHeader className={undefined}>
-                                    <AlertDialogTitle className={undefined}>Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription className={undefined}>
-                                        This action cannot be undone. This will permanently delete your current budget along with all its expenses.
-                                        and remove your data from our servers.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter className={undefined}>
-                                    <AlertDialogCancel className={undefined}>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => deleteBudget()} className={undefined}>Continue</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button className="flex gap-2" variant="destructive" size="sm">
+                                        <Trash />delete</Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className={undefined}>
+                                    <AlertDialogHeader className={undefined}>
+                                        <AlertDialogTitle className={undefined}>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription className={undefined}>
+                                            This action cannot be undone. This will permanently delete your current budget along with all its expenses.
+                                            and remove your data from our servers.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter className={undefined}>
+                                        <AlertDialogCancel className={undefined}>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => deleteBudget()} className={undefined}>Continue</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         </div>
                     </h2>
                     <br></br>
