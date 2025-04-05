@@ -1,12 +1,12 @@
 import React, { use } from 'react'
 import Dashboard from './page'
-import Dash from './pages/dashboard'
 import { useUser } from '@clerk/nextjs'
-import { db } from '@/utils/dbConfig'
-import { Budgets } from '@/utils/schema'
+import { db } from '../../utils/dbConfig'
+import { Budgets } from '../../utils/schema'
 import { eq } from 'drizzle-orm'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { UserResource } from '@clerk/types'
+
 function DashboardLayout({ childern }) {
 
   const { user } = useUser();
@@ -18,7 +18,7 @@ function DashboardLayout({ childern }) {
   const checkUserBudget = async () => {
     const result = await db.select()
       .from(Budgets)
-      .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAdress))
+      .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
 
     console.log(result);
     if (result?.length === 0) {
@@ -32,7 +32,6 @@ function DashboardLayout({ childern }) {
         />
       </div>
       <div className='md:ml-64'>
-        <Dash />
         {childern}
       </div>
     </div>
@@ -40,3 +39,7 @@ function DashboardLayout({ childern }) {
 }
 
 export default DashboardLayout
+
+function useEffect(arg0: () => void, arg1: UserResource[]) {
+  throw new Error('Function not implemented.')
+}
