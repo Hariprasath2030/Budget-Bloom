@@ -10,6 +10,7 @@ export default function Page() {
           src= {img}
           alt="Expense Tracker"
           layout="fill"
+          
           objectFit="cover"
           quality={100}
           priority={true}

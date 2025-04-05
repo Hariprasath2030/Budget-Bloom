@@ -1,8 +1,9 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+// middleware.ts
+import { authMiddleware } from "@clerk/nextjs";
 
-export default clerkMiddleware({
-  publicRoutes: ["/sign-in", "/sign-up"], // Publicly accessible routes
-  ignoredRoutes: ["/api/webhook(.*)"],   // Routes to ignore
+export default authMiddleware({
+  publicRoutes: ["/","/sign-in", "/sign-up"],
+  ignoredRoutes: ["/api/webhook(.*)"],
 });
 
 export const config = {
@@ -12,4 +13,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-}
+};
