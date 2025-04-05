@@ -1,9 +1,9 @@
 "use client"
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; // ✅ Removed `use`
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Menu, X, Trash, ArrowLeft, PenBox } from 'lucide-react'; // Added X for close icon
-import DashboardHeader from '../../../dashboard/_components/DashboardHeader';  // Assuming DashboardHeader is inside _components folder
+import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Menu, X, Trash, ArrowLeft, PenBox } from 'lucide-react';
+import DashboardHeader from '../../../dashboard/_components/DashboardHeader';
 import { and, desc, eq, getTableColumns, sql } from 'drizzle-orm'
 import { Budgets, Expenses } from '../../../../utils/schema'
 import { db } from '../../../../utils/dbConfig'
@@ -13,6 +13,7 @@ import AddExpense from './_components/AddExpense';
 import ExpenseListTable from './_components/ExpenseListTable';
 import { Button } from '../../../../components/ui/button';
 import EditBudget from './_components/EditBudget';
+
 import {
     AlertDialog,
     AlertDialogAction,
@@ -27,23 +28,21 @@ import {
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
-
 export default function ExpensesScreen({ params }) {
     const { user } = useUser();
     const [budgetInfo, setBudgetInfo] = useState(null);
     const [expensesList, setExpensesList] = useState([]);
     const route = useRouter();
-    const resolvedParams = use(params);
-    // This ensures `params` is properly resolved before use.
+    // const resolvedParams = use(params); ❌ (Remove this line)
 
     useEffect(() => {
         if (user) {
             getBudgetInfo();
         }
-    }, [user, resolvedParams]); // ✅ Depend on resolvedParams
+    }, [user, params]); // ✅ Depend on params directly
 
     const getBudgetInfo = async () => {
-        if (!resolvedParams?.id) return; // ✅ Prevent errors if params are still loading
+        if (!params?.id) return; // ✅ Use params directly
 
         const result = await db
             .select({
@@ -56,39 +55,40 @@ export default function ExpensesScreen({ params }) {
             .where(
                 and(
                     eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress),
-                    eq(Budgets.id, resolvedParams.id) // ✅ Use unwrapped params
+                    eq(Budgets.id, params.id) // ✅ Use params.id
                 )
             )
             .groupBy(...Object.values(getTableColumns(Budgets)));
 
         setBudgetInfo(result[0]);
         getExpeneslist();
-
     };
 
     const getExpeneslist = async () => {
         const result = await db.select().from(Expenses)
-            .where(eq(Expenses.budgetId, resolvedParams.id))
+            .where(eq(Expenses.budgetId, params.id)) // ✅ Use params.id
             .orderBy(desc(Expenses.id));
         setExpensesList(result);
         console.log(result)
-
     }
 
     const deleteBudget = async () => {
-
         const deleteExpenseResult = await db.delete(Expenses)
-            .where(eq(Expenses.budgetId, resolvedParams.id))
+            .where(eq(Expenses.budgetId, params.id)) // ✅ Use params.id
             .returning()
 
         if (deleteExpenseResult) {
             const result = await db.delete(Budgets)
-                .where(eq(Budgets.id, resolvedParams.id))
+                .where(eq(Budgets.id, params.id)) // ✅ Use params.id
                 .returning();
         }
         toast("Budget deleted successfully")
         route.replace('/dashboard/budgets')
     }
+
+    // rest of your code (Sidebar, Hamburger Menu, etc.) is fine ✅
+
+
 
     const [isSidebarOpen, setSidebarOpen] = useState(false); // State for sidebar toggle
     const menuList = [
@@ -220,7 +220,7 @@ export default function ExpensesScreen({ params }) {
                         ) : (
                             <div className="h-[150px] w-full bg-slate-200 rounded-lg animate-bounce"></div>
                         )}
-                        <AddExpense budgetId={resolvedParams.id}
+                        <AddExpense budgetId={params.id}
                             user={user}
                             refreshData={() => getBudgetInfo()}
                         /> {/* ✅ Pass unwrapped params */}
