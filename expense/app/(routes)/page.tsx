@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-function page() {
+function Home{
     return (
         <div>
             Dashboard
@@ -15,4 +15,4 @@ function page() {
 </Link>
 
 
-export default page
+export default Home
