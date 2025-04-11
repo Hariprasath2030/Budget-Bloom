@@ -1,5 +1,5 @@
 import React, { use } from 'react'
-import Dashboard from './page'
+import Dashboard from '../dashboard/page'
 import { useUser } from '@clerk/nextjs'
 import { db } from '../../utils/dbConfig'
 import { Budgets } from '../../utils/schema'
