@@ -144,22 +144,23 @@ function SideNav() {
           <div className="w-full mt-4">
             <CardInfo budgetList={budgetList} />
             <br></br>
-            <div className="grid grid-cols-1 md:grid-cols-3 mt-6 gap-5">
-              <div className="md:col-span-2">
-                <BarChartDashboard
-                  budgetList={budgetList} />
-
-                <ExpenseListTable
-                  expensesList={expensesList}
-                  refreshData={() => getBudgetList()}
-                />
-              </div>
-              <div className="grid gap-5">
-                <h2 className="font-bold text-3xl">Latest Budgets</h2>
-                {budgetList.map((budget, index) => (
-                  <BudgetItem budget={budget} key={index} />
-                ))}
-              </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 mt-6 gap-5">
+            <div className="md:col-span-2">
+              <BarChartDashboard
+                budgetList={budgetList} />
+                <br></br>
+              <ExpenseListTable
+                expensesList={expensesList}
+                refreshData={() => getBudgetList()}
+              />
+            </div>
+            {/* <br></br> */}
+            <div className="grid gap-5 w-2xs">
+              <h2 className="font-bold text-3xl">Latest Budgets</h2>
+              {budgetList.map((budget, index) => (
+                <BudgetItem budget={budget} key={index} />
+              ))}
             </div>
           </div>
         </div>

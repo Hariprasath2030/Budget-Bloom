@@ -56,7 +56,7 @@ export default function CreateBudget({ refreshData }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <div className='bg-slate-100 p-10 w-2xs
+          <div className='bg-slate-100 p-13 w-2xs
            rounded-md items-center flex flex-col 
            border-2 border-dashed cursor-pointer
             hover:bg-slate-200 hover:border-slate-900'>

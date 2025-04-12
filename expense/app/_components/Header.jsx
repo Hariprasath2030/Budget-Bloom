@@ -6,26 +6,26 @@ import { UserButton, useUser } from '@clerk/nextjs';
 import img from '../../public/exlogo.jpg'
 import Link from 'next/link'
 function Header() {
-  const {isSignedIn} = useUser();
+  const { isSignedIn } = useUser();
   return (
     <div className='p-5 flex justify-between items-center border shadow-md'>
       <div className='text-2xl left-10 font-bold'
       >
-       <Image src ={img}
-       alt = 'logo'
-       left = {50}
-       width = {50}
-       height = {50}
-       className = 'rounded-full'
-       />
-       Expense Tracker
-       </div>
-       {isSignedIn?
-       <UserButton/> : 
-       <Link href ={'/sign-in'}>
-        <Button>Login in</Button>
-      </Link>
-       }
+        <Image src={img}
+          alt='logo'
+          left={50}
+          width={50}
+          height={50}
+          className='rounded-full'
+        />
+        Budget Bloom
+      </div>
+      {isSignedIn ?
+        <UserButton /> :
+        <Link href={'/sign-in'}>
+          <Button>Login in</Button>
+        </Link>
+      }
     </div>
   )
 }

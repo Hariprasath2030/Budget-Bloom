@@ -5,25 +5,24 @@ import { Toaster } from "../@/components/ui/sonner"
 
 
 const oxanium = Oxanium({
-  subsets: ['latin'],
-  variable: '--font-oxanium', // ✅ Add this line
+  subsets: ["latin"], // ✅ Add this line
 });
 
 export const metadata = {
-  title: "Expense Tracker App",
+  title: "Budget Bloom App",
   description: "Track your expenses and save money!",
 };
 
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body
-        className={oxanium.variable}>
-           <Toaster />
-        {children}
-      </body>
-    </html>
+      <html lang="en">
+        <body
+          className={oxanium.className}>
+          <Toaster />
+          {children}
+        </body>
+      </html>
     </ClerkProvider>
   );
 }

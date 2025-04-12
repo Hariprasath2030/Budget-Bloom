@@ -8,7 +8,7 @@ function Input({
   ...props
 }) {
   return (
-    <Input
+    <input
       type={type}
       data-slot="input"
       className={cn(
