@@ -9,13 +9,12 @@ export default function Page() {
         <Image
           src= {img}
           alt="Expense Tracker"
-          layout="fill"
-          objectFit="cover"
+          fill
           quality={100}
           priority={true}
           className="object-cover"
           loading="eager"
-          style={{filter: "blur(8px)", height: "100%"}}
+          style={{filter: "blur(8px)", height: "100%", objectFit: "cover"}}
           placeholder="blur"
         />
       </div>

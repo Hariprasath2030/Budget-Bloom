@@ -31,7 +31,7 @@ function ExpenseListTable({ expensesList, refreshData }) {
           <h2>Category</h2>
         </div>
         {expensesList.map((expense) => (
-          <div key={expense.id} className='grid grid-cols-4 bg-slate-100 p-2'>
+          <div key={expense.id} className='grid grid-cols-4 bg-slate-100 p-3 gap-3'>
             <h2 className='font-bold items'>{expense.name}</h2>
             <h2 className='font-bold'>{expense.amount}</h2>
             <h2 className='font-bold'>{expense.createdAt}</h2>

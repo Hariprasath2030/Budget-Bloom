@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { db } from '../../../../utils/dbConfig';
 import { Budgets } from '../../../../utils/schema';
 
-export default function CreateBudget({refreshData}) {
+export default function CreateBudget({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState('😊');
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const [name, setName] = useState('');
@@ -55,7 +55,7 @@ export default function CreateBudget({refreshData}) {
   return (
     <div>
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <div className='bg-slate-100 p-10 w-2xs
            rounded-md items-center flex flex-col 
            border-2 border-dashed cursor-pointer
