@@ -54,7 +54,9 @@ function CardInfo({ budgetList }) {
             <div
               key={index}
               className='h-[110px] w-full bg-slate-200 animate-bounce rounded-lg'
-            ></div>
+            >
+              <p className='text-center text-black'>No budget found</p>
+            </div>
           ))}
         </div>
       )}

@@ -1,50 +1,58 @@
 import { SignUp } from "@clerk/nextjs";
-import Image from 'next/image';
+import Image from "next/image";
 import img from "../../../../public/signup.jpg";
 import Link from "next/link";
+
 export default function Page() {
   return (
-    <section className="relative h-screen">
-      <div className="absolute inset-0">
+    <section className="relative min-h-screen">
+      {/* Background Image */}
+      <div className="absolute inset-0 -z-10">
         <Image
-          src= {img}
-          alt="Expense Tracker"
+          src={img}
+          alt="Expense Tracker Background"
           fill
           quality={100}
-          priority={true}
-          className="object-cover"
-          loading="eager"
-          style={{filter: "blur(8px)", height: "100%", objectFit: "cover"}}
+          priority
+          className="object-cover blur-sm"
           placeholder="blur"
         />
       </div>
 
-      <div className="absolute inset-0 bg-gray-900/75 sm:bg-transparent sm:from-gray-900/95 sm:to-gray-900/25 ltr:sm:bg-gradient-to-r rtl:sm:bg-gradient-to-l"></div>
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 -z-10 bg-gray-900/70"></div>
 
-      <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:px-8">
-        <div className="max-w-xl text-center ltr:sm:text-left rtl:sm:text-right">
-          <h1 className="text-3xl font-extrabold text-white sm:text-5xl">
-            Take control of your  
+      {/* Content */}
+      <div className="relative mx-auto max-w-screen-xl px-4 py-32 sm:px-6 lg:flex lg:h-screen lg:items-center lg:justify-between lg:px-8">
+
+        {/* Left Side Content */}
+        <div className="max-w-xl text-center lg:text-left">
+          <h1 className="text-4xl font-extrabold text-white sm:text-6xl">
+            Take control of your
             <strong className="block font-extrabold text-rose-500"> Finances. </strong>
           </h1>
 
-          <p className="mt-4 max-w-lg text-white sm:text-xl/relaxed">
-            Track your expenses, set budgets, and gain financial freedom with our smart expense tracker. Start managing your money better today!
+          <p className="mt-4 max-w-lg text-white sm:text-xl">
+            Track your expenses, set budgets, and gain financial freedom with our smart budget bloom. Start managing your money better today!
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4 text-center">
-         <Link
-          href="/sign-in"
-         className="block w-full rounded-sm bg-rose-600 px-40 py-3 text-sm font-medium text-white shadow-sm hover:bg-rose-700 focus:ring-3 focus:outline-hidden sm:w-auto"
-           >
-           Login with Expense Tracker
-          </Link>
+            <Link
+              href="/sign-in"
+              className="block w-full sm:w-auto rounded-md bg-rose-600 px-10 py-3 text-sm font-semibold text-white shadow-lg hover:bg-black focus:ring-4 focus:ring-rose-500 transition"
+            >
+              Login with Budget Bloom
+            </Link>
           </div>
         </div>
 
-        <div className="mt-1 ltr:ml-auto rtl:mr-auto">
-        <SignUp routing="hash" />
-       </div>
+        {/* Right Side: SignUp Form */}
+        <div className="mt-12 lg:mt-0 lg:w-1/2 flex justify-center">
+          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-8 shadow-2xl max-w-md w-full">
+            <SignUp routing="hash" />
+          </div>
+        </div>
+
       </div>
     </section>
   );

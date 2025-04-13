@@ -8,12 +8,12 @@ const Hero = () => {
       <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="p-3 text-3xl font-extrabold sm:text-5xl">
-            Welcome to Expense Tracker
+            Welcome to Budget Bloom
             <strong className="mt-3 font-extrabold text-blue-700 sm:block">Take Control of Your Finances! </strong>
           </h1>
 
           <p className="mt-4 font-serif sm:text-xl/relaxed">
-            Managing your finances doesn’t have to be complicated. With Expense Tracker, you can effortlessly monitor your income, track your expenses, and gain insights into your spending habits—all in one place.
+            Managing your finances doesn’t have to be complicated. With Budget Bloom, you can effortlessly monitor your income, track your expenses, and gain insights into your spending habits—all in one place.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -295,7 +295,7 @@ const Hero = () => {
                       className="text-gray-700 transition hover:text-gray-700/75 dark:text-white dark:hover:text-white/75"
                       href="#"
                     >
-                      Expense Tracking Tutorials
+                      Budget bloom Tutorials
                     </a>
                   </li>
                 </ul>
@@ -304,10 +304,12 @@ const Hero = () => {
                 <p className="text-lg font-medium text-gray-900 dark:text-white">Contact Us</p>
 
                 <ul className="mt-8 space-y-4 text-sm">
+                  <span className="text-lg flex-1 text-gray-700 dark:text-gray-300">Developed By Hariprasath V</span>
                   <li>
+                    <br></br>
                     <a
                       className="flex items-center justify-center gap-1.5 ltr:sm:justify-start rtl:sm:justify-end"
-                      href="#"
+                      href=""
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -376,7 +378,7 @@ const Hero = () => {
                     </svg>
 
                     <address className="-mt-0.5 flex-1 not-italic text-gray-700 dark:text-gray-300">
-                      Sri Shakthi institute of management and technology,
+                      Sri Shakthi institute of engineering and technology,
                     </address>
                   </li>
                 </ul>
@@ -407,7 +409,7 @@ const Hero = () => {
               </p>
 
               <p className="mt-4 text-sm text-gray-500 sm:order-first sm:mt-0 dark:text-gray-400">
-                &copy; 2025 EXPENSE TRACKER. All rights reserved.
+                &copy; 2025 Budget Bloom. All rights reserved.
               </p>
             </div>
           </div>
