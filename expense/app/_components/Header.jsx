@@ -8,7 +8,7 @@ import Link from 'next/link'
 function Header() {
   const { isSignedIn } = useUser();
   return (
-    <div className='p-5 flex justify-between items-center border shadow-md'>
+    <div className='p-5 flex justify-between items-center border shadow-md '>
       <div className='text-2xl left-10 font-bold'
       >
         <Image src={img}

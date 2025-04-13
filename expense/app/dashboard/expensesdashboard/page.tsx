@@ -69,20 +69,28 @@ function expensesdashboard() {
             </div>
 
             <div className="flex">
-                {/* Mobile Hamburger */}
+                {/* Hamburger menu on mobile */}
                 <div className="lg:hidden p-4">
-                    <button onClick={handleHamburgerClick}>
+                    <button
+                        className="text-lg"
+                        onClick={handleHamburgerClick} // Toggle the sidebar visibility
+                    >
                         <Menu size={24} />
                     </button>
                 </div>
 
-                {/* Sidebar Desktop */}
-                <div className="hidden lg:block h-screen p-5 border shadow-sm w-64 bg-white">
+                {/* Sidebar for Desktop (Always visible on desktop) */}
+                <div
+                    className="h-screen p-5 border shadow-sm w-64 bg-white hidden lg:block"
+                >
                     <ul className="mt-6 px-8 space-y-6 text-lg">
                         {menuList.map((link) => (
                             <li key={link.name}>
                                 <Link href={link.href} className="block">
-                                    <div className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-primary bg-blue-100" : ""}`}>
+                                    <div
+                                        className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-primary bg-blue-100" : ""
+                                            }`}
+                                    >
                                         <link.icon size={24} />
                                         <span>{link.name}</span>
                                     </div>
@@ -92,19 +100,26 @@ function expensesdashboard() {
                     </ul>
                 </div>
 
-                {/* Sidebar Mobile */}
-                <div className={`lg:hidden fixed top-0 left-0 h-screen p-5 border shadow-sm w-64 bg-white transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-                    <div className="absolute top-5 right-4">
+                {/* Sidebar for Mobile (Toggle visibility on hamburger click) */}
+                <div
+                    className={`lg:hidden h-screen p-5 border shadow-sm w-64 bg-white fixed top-0 left-0 transition-transform duration-300 ${isSidebarOpen ? "transform translate-x-0" : "transform -translate-x-full"
+                        }`}
+                >
+                    {/* Close button inside the sidebar */}
+                    <div className="absolute top-25 right-4">
                         <button onClick={handleCloseSidebar}>
                             <X size={24} />
                         </button>
                     </div>
 
-                    <ul className="mt-10 px-8 space-y-6 text-lg">
+                    <ul className="mt-35 px-8 space-y-6 text-lg "> {/* Add margin-top to avoid overlap with close button */}
                         {menuList.map((link) => (
                             <li key={link.name}>
                                 <Link href={link.href} className="block">
-                                    <div className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-primary bg-blue-100" : ""}`}>
+                                    <div
+                                        className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-primary bg-blue-100" : ""
+                                            }`}
+                                    >
                                         <link.icon size={24} />
                                         <span>{link.name}</span>
                                     </div>

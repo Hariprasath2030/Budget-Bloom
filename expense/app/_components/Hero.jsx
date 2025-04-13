@@ -58,7 +58,7 @@ const Hero = () => {
               <ul className="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
                 <li>
                   <a
-                    href="#"
+                    href="https://www.facebook.com/"
                     rel="noreferrer"
                     target="_blank"
                     className="text-teal-700 transition hover:text-teal-700/75 dark:text-teal-500 dark:hover:text-teal-500/75"
@@ -76,7 +76,7 @@ const Hero = () => {
 
                 <li>
                   <a
-                    href="#"
+                    href="https://www.instagram.com/"
                     rel="noreferrer"
                     target="_blank"
                     className="text-teal-700 transition hover:text-teal-700/75 dark:text-teal-500 dark:hover:text-teal-500/75"
@@ -94,7 +94,7 @@ const Hero = () => {
 
                 <li>
                   <a
-                    href="#"
+                    href="https://x.com/"
                     rel="noreferrer"
                     target="_blank"
                     className="text-teal-700 transition hover:text-teal-700/75 dark:text-teal-500 dark:hover:text-teal-500/75"
@@ -110,7 +110,7 @@ const Hero = () => {
 
                 <li>
                   <a
-                    href="#"
+                    href="https://github.com/Hariprasath2030"
                     rel="noreferrer"
                     target="_blank"
                     className="text-teal-700 transition hover:text-teal-700/75 dark:text-teal-500 dark:hover:text-teal-500/75"
@@ -133,7 +133,7 @@ const Hero = () => {
                     target="_blank"
                     className="text-teal-700 transition hover:text-teal-700/75 dark:text-teal-500 dark:hover:text-teal-500/75"
                   >
-                    <span className="sr-only">Dribbble</span>
+                    <span className="sr-only">Dribble</span>
                     <svg className="size-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path
                         fillRule="evenodd"

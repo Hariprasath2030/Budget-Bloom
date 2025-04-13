@@ -60,7 +60,6 @@ function SideNav() {
   ];
 
   const path = usePathname();
-  console.log("Current Path:", path); // Debugging
 
   // Handle hamburger icon click to toggle the sidebar
   const handleHamburgerClick = () => {
@@ -149,7 +148,7 @@ function SideNav() {
             <div className="md:col-span-2">
               <BarChartDashboard
                 budgetList={budgetList} />
-                <br></br>
+              <br></br>
               <ExpenseListTable
                 expensesList={expensesList}
                 refreshData={() => getBudgetList()}
