@@ -18,7 +18,7 @@ const Hero = () => {
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a
-              className="block w-full rounded-sm bg-blue-600 px-12 py-3 text-lg font-medium text-white shadow-sm hover:bg-red-700 focus:ring-3 focus:outline-hidden sm:w-auto"
+              className="block w-full rounded-sm bg-blue-600 px-12 py-3 text-lg font-medium text-white shadow-sm hover:bg-black focus:ring-3 focus:outline-hidden sm:w-auto"
               href="/sign-in"
             >
               Get Started
@@ -50,7 +50,7 @@ const Hero = () => {
               <p
                 className="mt-6 max-w-md text-center leading-relaxed text-gray-500 sm:max-w-xs sm:text-left dark:text-gray-400"
               >
-                Take control of your finances with our Expense Tracker. Easily monitor your spending, set budgets,
+                Take control of your finances with our Budget Bloom. Easily monitor your spending, set budgets,
                 and gain insights into your financial habits. Stay on top of your expenses and make informed
                 financial decisions effortlessly.
               </p>
