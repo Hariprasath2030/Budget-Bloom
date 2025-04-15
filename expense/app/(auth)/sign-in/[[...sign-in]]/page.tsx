@@ -48,8 +48,8 @@ export default function Page() {
         </div>
 
         {/* Sign In */}
-        <div className="mt-12 sm:mt-0 sm:ml-40 flex justify-center sm:justify-end">
-          <div className="w-full sm:w-auto bg-white/10 backdrop-blur-md p-6 rounded-lg">
+        <div className="mt-20 sm:mt-0 sm:ml-40 flex justify-center sm:justify-end">
+          <div className="w-full sm:w-auto bg-white/10 backdrop-blur-md p-1 rounded-lg">
             <SignIn routing="hash" />
           </div>
         </div>

@@ -48,7 +48,7 @@ export default function Page() {
 
         {/* Right Side: SignUp Form */}
         <div className="mt-12 lg:mt-0 lg:w-1/2 flex justify-center">
-          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-8 shadow-2xl max-w-md w-full">
+          <div className="rounded-2xl bg-white/10 backdrop-blur-md p-1 shadow-xl max-w-md">
             <SignUp routing="hash" />
           </div>
         </div>
