@@ -23,7 +23,7 @@ function Header() {
       {isSignedIn ?
         <UserButton /> :
         <Link href={'/sign-in'}>
-          <Button>Login in</Button>
+          <Button>Login</Button>
         </Link>
       }
     </div>
