@@ -11,6 +11,10 @@ const oxanium = Oxanium({
 export const metadata = {
   title: "Budget Bloom App",
   description: "Track your expenses and save money!",
+  icons: {
+    icon: "/icon.ico", 
+  },
+   
 };
 
 export default function RootLayout({ children }) {
