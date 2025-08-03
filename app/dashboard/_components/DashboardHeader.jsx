@@ -7,8 +7,11 @@
 +import { IconButton } from '@mui/material';
 
 -function DashboardHeader() {
+}
 +function DashboardHeader({ onMenuClick }) {
    return (
+   )
+}
 -    <div className='p-5 shadow-sm border-b flex justify-between items-center'>
 +    <div className='p-3 md:p-5 shadow-lg border-b flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-600'>
 +      <div className='flex items-center space-x-3'>
