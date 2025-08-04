@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "TAILWIND_DISABLE_NATIVE=true next dev",
+    "dev": "cross-env TAILWIND_DISABLE_NATIVE=true next dev",
     "build": "TAILWIND_DISABLE_NATIVE=true next build",
     "start": "next start",
     "vercel-build": "TAILWIND_DISABLE_NATIVE=true next build",
@@ -43,6 +43,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/node": "22.13.10",
     "@types/react": "19.0.10",
+    "cross-env": "^10.0.0",
     "drizzle-kit": "^0.30.5",
     "next": "^15.2.4",
     "pg": "^8.14.1",

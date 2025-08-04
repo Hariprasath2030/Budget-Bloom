@@ -10,8 +10,8 @@ import { db } from '../../../../utils/dbConfig'
 import { useUser } from '@clerk/nextjs';
 import BudgetItem from '../../budgets/_components/BudgetItem';
 import AddExpense from './_components/AddExpense';
-import PaginatedTable from '../../../_components/PaginatedTable';
-import DateRangeFilter from '../../../_components/DateRangeFilter';
+import PaginatedTable from '../../_components/PaginatedTable';
+import DateRangeFilter from '../../_components/DateRangeFilter';
 import { Button } from '../../../../components/ui/button';
 import EditBudget from './_components/EditBudget';
 import dayjs from 'dayjs';

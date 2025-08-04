@@ -11,8 +11,8 @@ import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../utils/dbConfig";
 import BarChartDashboard from '../dashboard/_components/BarChartDashboard'
 import BudgetItem from "./budgets/_components/BudgetItem";
-import PaginatedTable from '../_components/PaginatedTable';
-import DateRangeFilter from '../_components/DateRangeFilter';
+import PaginatedTable from './_components/PaginatedTable';
+import DateRangeFilter from './_components/DateRangeFilter';
 import dayjs from 'dayjs';
 
 function SideNav() {

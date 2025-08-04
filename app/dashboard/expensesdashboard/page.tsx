@@ -8,8 +8,8 @@ import { Budgets, Expenses } from "../../../utils/schema";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../../utils/dbConfig";
 import DashboardHeader from '../../dashboard/_components/DashboardHeader';
-import PaginatedTable from '../../_components/PaginatedTable';
-import DateRangeFilter from '../../_components/DateRangeFilter';
+import PaginatedTable from '../_components/PaginatedTable';
+import DateRangeFilter from '../_components/DateRangeFilter';
 import dayjs from 'dayjs';
 
 function expensesdashboard() {
