@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env TAILWIND_DISABLE_NATIVE=true next dev",
-    "build": "TAILWIND_DISABLE_NATIVE=true next build",
+    "build": "cross-env TAILWIND_DISABLE_NATIVE=true next build",
     "start": "next start",
     "vercel-build": "TAILWIND_DISABLE_NATIVE=true next build",
     "lint": "next lint",
