@@ -223,12 +223,3 @@ This project is licensed under the MIT License.
 ---
 
 **Budget Bloom** - Take control of your finances! 🌸💰
-
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_Y2FsbS1nYXRvci0zNy5jbGVyay5hY2NvdW50cy5kZXYk
-CLERK_SECRET_KEY=sk_test_55KubrlC3eH7CtT9bzK53Jg8G4AfPYSCNVOKQY0piu
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
-NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-
-NEXT_PUBLIC_DATABASE_URL=postgresql://expense_owner:npg_MAdrta45Fjcq@ep-restless-breeze-a5jzokm7-pooler.us-east-2.aws.neon.tech/expense?sslmode=require
