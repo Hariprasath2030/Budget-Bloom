@@ -6,6 +6,7 @@ export const Budgets = pgTable('budgets', {
     amount: numeric('amount').notNull(),
     icon: varchar('icon'),
     createdBy: varchar('createdBy').notNull(),
+   parentId: integer("parent_id", { mode: "nullable" }),
 });
 
 export const Expenses = pgTable('expenses', {

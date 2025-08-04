@@ -13,7 +13,6 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Filter expenses by date range
   const filteredExpenses = useMemo(() => {
     if (!dateRange || !dateRange[0] || !dateRange[1]) {
       return expensesList;
@@ -29,7 +28,6 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
     });
   }, [expensesList, dateRange]);
 
-  // Calculate pagination
   const totalPages = Math.ceil(filteredExpenses.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedExpenses = filteredExpenses.slice(startIndex, startIndex + itemsPerPage);
@@ -51,7 +49,6 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
         toast.success("Expense deleted successfully");
         refreshData();
         
-        // Adjust current page if needed
         const newTotalPages = Math.ceil((filteredExpenses.length - 1) / itemsPerPage);
         if (currentPage > newTotalPages && newTotalPages > 0) {
           setCurrentPage(newTotalPages);
@@ -78,13 +75,12 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
   return (
     <div className="mt-6 bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div className="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4">
-        <h1 className="font-bold text-2xl text-white">Latest Expenses</h1>
-        <p className="text-indigo-100 text-sm mt-1">
+        <h1 className="font-bold text-2xl text-white text-center">Latest Expenses</h1>
+        <p className="text-indigo-100 text-sm mt-1 text-end">
           Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredExpenses.length)} of {filteredExpenses.length} expenses
         </p>
       </div>
 
-      {/* Desktop Table Header */}
       <div className="hidden md:grid grid-cols-4 bg-gradient-to-r from-gray-100 to-gray-50 px-6 py-4 gap-4 border-b border-gray-200">
         <h2 className="font-semibold text-gray-700">Name</h2>
         <h2 className="font-semibold text-gray-700">Amount</h2>
@@ -92,7 +88,6 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
         <h2 className="font-semibold text-gray-700">Actions</h2>
       </div>
 
-      {/* Table Body */}
       <div className="divide-y divide-gray-100">
         {paginatedExpenses.map((expense, index) => (
           <div
@@ -101,7 +96,6 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
               index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
             }`}
           >
-            {/* Mobile View */}
             <div className="md:hidden space-y-3">
               <div className="flex justify-between items-start">
                 <div>
@@ -110,7 +104,7 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
                 </div>
                 <Trash
                   className="text-red-500 hover:text-red-700 cursor-pointer transition-colors duration-200 p-1 hover:bg-red-50 rounded"
-                  size={32}
+                  size={36}
                   onClick={() => deleteExpense(expense)}
                 />
               </div>
@@ -125,15 +119,13 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
                 </div>
               </div>
             </div>
-
-            {/* Desktop View */}
             <h2 className="hidden md:block font-semibold text-gray-900 self-center">{expense.name}</h2>
             <h2 className="hidden md:block font-bold text-green-600 text-lg self-center">${expense.amount}</h2>
             <h2 className="hidden md:block font-medium text-gray-700 self-center">{expense.createdAt}</h2>
             <div className="hidden md:flex justify-start items-center">
               <Trash
                 className="text-red-500 hover:text-red-700 cursor-pointer transition-colors duration-200 p-2 hover:bg-red-50 rounded-lg"
-                size={20}
+                size={36}
                 onClick={() => deleteExpense(expense)}
               />
             </div>

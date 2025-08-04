@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -10,19 +10,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../../../@/components/ui/dialog";
-import EmojiPicker from 'emoji-picker-react';
-import { Button } from '../../../../components/ui/button';
+import EmojiPicker from "emoji-picker-react";
+import { Button } from "../../../../components/ui/button";
 import { Input } from "../../../../@/components/ui/input";
-import { useUser } from '@clerk/nextjs';
-import { toast } from 'sonner';
-import { db } from '../../../../utils/dbConfig';
-import { Budgets } from '../../../../utils/schema';
+import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
+import { db } from "../../../../utils/dbConfig";
+import { Budgets } from "../../../../utils/schema";
 
-export default function CreateBudget({ refreshData }) {
-  const [emojiIcon, setEmojiIcon] = useState('😊');
+export default function CreateBudget({ refreshData, parentOptions }) {
+  const [emojiIcon, setEmojiIcon] = useState("😊");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
-  const [name, setName] = useState('');
-  const [amount, setAmount] = useState('');
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [parentId, setParentId] = useState("");
 
   const { user } = useUser();
 
@@ -33,18 +34,23 @@ export default function CreateBudget({ refreshData }) {
     }
 
     try {
-      const result = await db.insert(Budgets).values({
-        name: name,
-        amount: Number(amount), // ✅ Ensure amount is a number
-        createdBy: user?.primaryEmailAddress?.emailAddress || "Anonymous",
-        icon: emojiIcon
-      }).returning({ insertedId: Budgets.id });
+      const result = await db
+        .insert(Budgets)
+        .values({
+          name: name,
+          amount: Number(amount),
+          createdBy: user?.primaryEmailAddress?.emailAddress || "Anonymous",
+          icon: emojiIcon,
+          parentId: parentId || null, // NEW: Save parentId if selected
+        })
+        .returning({ insertedId: Budgets.id });
 
       if (result) {
-        refreshData()
+        refreshData();
         toast.success("New Budget Created Successfully");
-        setName('');
-        setAmount('');
+        setName("");
+        setAmount("");
+        setParentId("");
       }
     } catch (error) {
       console.error("Error creating budget:", error);
@@ -56,22 +62,28 @@ export default function CreateBudget({ refreshData }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <div className='bg-gradient-to-br from-blue-50 to-indigo-50 p-8 w-full
+          <div
+            className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 w-full
            rounded-xl items-center flex flex-col 
            border-2 border-dashed border-blue-300 cursor-pointer
-            hover:bg-gradient-to-br hover:from-blue-100 hover:to-indigo-100 hover:border-blue-500 transition-all duration-300 transform hover:scale-105 h-[170px] justify-center'>
-            <div className='bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center mb-3 shadow-lg'>
-              <h2 className='text-2xl font-bold'>+</h2>
+            hover:bg-gradient-to-br hover:from-blue-100 hover:to-indigo-100 hover:border-blue-500 transition-all duration-300 transform hover:scale-105 h-[170px] justify-center"
+          >
+            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center mb-3 shadow-lg">
+              <h2 className="text-2xl font-bold">+</h2>
             </div>
-            <h2 className='text-gray-700 font-semibold text-center'>Create New Budget</h2>
-            <p className='text-gray-500 text-sm mt-1 text-center'>Start tracking your expenses</p>
+            <h2 className="text-gray-700 font-semibold text-center">
+              Create New Budget
+            </h2>
+            <p className="text-gray-500 text-sm mt-1 text-center">
+              Start tracking your expenses
+            </p>
           </div>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create New Budget</DialogTitle>
             <DialogDescription>
-              <div className='mt-5'>
+              <div className="mt-5">
                 <Button
                   variant="outline"
                   className="text-lg"
@@ -80,7 +92,7 @@ export default function CreateBudget({ refreshData }) {
                   {emojiIcon}
                 </Button>
                 {openEmojiPicker && (
-                  <div className='absolute right-0 top-0 z-50'>
+                  <div className="absolute right-0 top-0 z-50">
                     <EmojiPicker
                       onEmojiClick={(e) => {
                         setEmojiIcon(e.emoji);
@@ -89,16 +101,18 @@ export default function CreateBudget({ refreshData }) {
                     />
                   </div>
                 )}
-                <div className='mt-2'>
-                  <h2 className='text-black font-medium my-1'>Budget Name</h2>
+
+                <div className="mt-2">
+                  <h2 className="text-black font-medium my-1">Budget Name</h2>
                   <Input
                     placeholder="Enter Budget Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
-                <div className='mt-2'>
-                  <h2 className='text-black font-medium my-1'>Budget Amount</h2>
+
+                <div className="mt-2">
+                  <h2 className="text-black font-medium my-1">Budget Amount</h2>
                   <Input
                     type="number"
                     placeholder="Enter Budget Amount"
@@ -106,9 +120,40 @@ export default function CreateBudget({ refreshData }) {
                     onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
+                <div className="mt-2">
+                  <h2 className="text-black font-medium my-1">Parent Budget</h2>
+                  <select
+                    value={parentId}
+                    onChange={(e) => setParentId(e.target.value)}
+                    className="
+      w-full 
+      border border-gray-300 
+      p-2 
+      rounded-lg 
+      text-sm sm:text-base 
+      focus:outline-none 
+      focus:ring-2 
+      focus:ring-blue-400 
+      transition-all 
+      duration-200
+    "
+                  >
+                    <option value="">Make this a Parent Budget</option>
+                    {parentOptions.map((parent) => (
+                      <option
+                        key={parent.id}
+                        value={parent.id}
+                        className="text-gray-700"
+                      >
+                        Child of {parent.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </DialogDescription>
           </DialogHeader>
+
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <Button

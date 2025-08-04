@@ -65,32 +65,27 @@ function SideNav() {
 
   const path = usePathname();
 
-  // Handle hamburger icon click to toggle the sidebar
   const handleHamburgerClick = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
-  // Handle close button click to close the sidebar
   const handleCloseSidebar = () => {
     setSidebarOpen(false);
   };
 
   return (
     <>
-      {/* Header */}
       <div className="sticky top-0 z-10 bg-white shadow-sm">
         <DashboardHeader />
       </div>
 
       <div className="flex">
-        {/* Hamburger (Mobile Only) */}
         <div className="lg:hidden p-4">
           <button onClick={() => setSidebarOpen(!isSidebarOpen)}>
             <Menu size={24} />
           </button>
         </div>
 
-        {/* Sidebar (Desktop) */}
         <div className="hidden lg:block h-auto p-5 w-64 bg-white border shadow-sm">
           <ul className="mt-6 px-8 space-y-6 text-lg">
             {menuList.map((link) => (
@@ -108,8 +103,6 @@ function SideNav() {
             ))}
           </ul>
         </div>
-
-        {/* Sidebar (Mobile) */}
         <div
           className={`lg:hidden fixed top-0 left-0 h-screen w-64 bg-white p-5 border shadow-sm z-20 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
@@ -140,8 +133,8 @@ function SideNav() {
             <h2 className="font-bold text-3xl md:text-4xl lg:text-5xl">Hi, {user?.fullName} 👋</h2>
             <p className="text-blue-100 text-lg mt-2">Welcome back to your financial dashboard!</p>
           </div>
-          <br></br>
-          <div className="w-full mt-4">
+          <br></br> 
+          <div className="w-full mt-4 animate-bounce'">
             <CardInfo budgetList={budgetList} />
             <br></br>
           </div>

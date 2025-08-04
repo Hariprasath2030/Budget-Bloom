@@ -18,34 +18,19 @@ export default function Budgets() {
   ];
 
   const path = usePathname();
-  console.log("Current Path:", path); // Debugging
-
-  // Handle hamburger icon click to toggle the sidebar
-  const handleHamburgerClick = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
-
-  // Handle close button click to close the sidebar
-  const handleCloseSidebar = () => {
-    setSidebarOpen(false);
-  };
 
   return (
     <>
-      {/* Header */}
       <div className="sticky top-0 z-10 bg-white shadow-sm">
         <DashboardHeader />
       </div>
 
       <div className="flex">
-        {/* Hamburger (Mobile Only) */}
         <div className="lg:hidden p-4">
           <button onClick={() => setSidebarOpen(!isSidebarOpen)}>
             <Menu size={24} />
           </button>
         </div>
-
-        {/* Sidebar (Desktop) */}
         <div className="hidden lg:block h-auto p-5 w-64 bg-white border shadow-sm">
           <ul className="mt-6 px-8 space-y-6 text-lg">
             {menuList.map((link) => (
@@ -63,8 +48,6 @@ export default function Budgets() {
             ))}
           </ul>
         </div>
-
-        {/* Sidebar (Mobile) */}
         <div
           className={`lg:hidden fixed top-0 left-0 h-screen w-64 bg-white p-5 border shadow-sm z-20 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
@@ -90,7 +73,6 @@ export default function Budgets() {
             ))}
           </ul>
         </div>  
-        {/* Page Content */}
         <div className="p-10 w-full">
           <h2 className="font-bold text-3xl">
             <span className='flex gap-2 items-center'>
@@ -99,7 +81,6 @@ export default function Budgets() {
               Budgets
             </span>
           </h2>
-          {/* BudgetList Component */}
           <BudgetList />
         </div>
       </div>
