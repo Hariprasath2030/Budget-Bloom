@@ -8,7 +8,9 @@ import { Budgets, Expenses } from "../../../utils/schema";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../../utils/dbConfig";
 import DashboardHeader from '../../dashboard/_components/DashboardHeader';
-import ExpenseListTable from '../expenses/[id]/_components/ExpenseListTable';
+import PaginatedTable from '../../_components/PaginatedTable';
+import DateRangeFilter from '../../_components/DateRangeFilter';
+import dayjs from 'dayjs';
 
 function expensesdashboard() {
 
@@ -16,6 +18,7 @@ function expensesdashboard() {
 
     const [budgetList, setBudgetList] = useState([]);
     const [expensesList, setExpensesList] = useState([]);
+    const [dateRange, setDateRange] = useState([null, null]);
     useEffect(() => {
         user && getBudgetList();
     }, [user])
@@ -123,17 +126,22 @@ function expensesdashboard() {
                     </ul>
                 </div>
                 {/* Page Content */}
-                <div className="p-10 w-full">
-                    <h2 className="font-bold text-3xl flex justify-between items-center">
+                <div className="p-6 w-full bg-gray-50 min-h-screen">
+                    <h2 className="font-bold text-3xl flex justify-between items-center text-gray-800 mb-6">
                         <span className="flex gap-2 items-center">
                             <ArrowLeft onClick={() => router.back()} className="cursor-pointer" />
                             My Expense List
                         </span>
                     </h2>
 
-                    <div className="mt-6">
-                        <ExpenseListTable
+                    <div className="space-y-6">
+                        <DateRangeFilter 
+                            dateRange={dateRange}
+                            onDateRangeChange={setDateRange}
+                        />
+                        <PaginatedTable
                             expensesList={expensesList}
+                            dateRange={dateRange}
                             refreshData={() => getBudgetList()}
                         />
                     </div>

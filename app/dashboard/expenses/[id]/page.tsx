@@ -10,9 +10,11 @@ import { db } from '../../../../utils/dbConfig'
 import { useUser } from '@clerk/nextjs';
 import BudgetItem from '../../budgets/_components/BudgetItem';
 import AddExpense from './_components/AddExpense';
-import ExpenseListTable from './_components/ExpenseListTable';
+import PaginatedTable from '../../../_components/PaginatedTable';
+import DateRangeFilter from '../../../_components/DateRangeFilter';
 import { Button } from '../../../../components/ui/button';
 import EditBudget from './_components/EditBudget';
+import dayjs from 'dayjs';
 
 import {
     AlertDialog,
@@ -33,6 +35,7 @@ export default function ExpensesScreen({ params }) {
     const { user } = useUser();
     const [budgetInfo, setBudgetInfo] = useState(null);
     const [expensesList, setExpensesList] = useState([]);
+    const [dateRange, setDateRange] = useState([null, null]);
     const route = useRouter();
     // const resolvedParams = use(params); ❌ (Remove this line)
 
@@ -222,10 +225,14 @@ export default function ExpensesScreen({ params }) {
                         /> {/* ✅ Pass unwrapped params */}
                     </div>
                     <div className='mt-4'>
-                        <ExpenseListTable
+                        <DateRangeFilter 
+                            dateRange={dateRange}
+                            onDateRangeChange={setDateRange}
+                        />
+                        <PaginatedTable
                             expensesList={expensesList}
+                            dateRange={dateRange}
                             refreshData={() => getBudgetInfo()}
-
                         />
                     </div>
                 </div>

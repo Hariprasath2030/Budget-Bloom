@@ -56,12 +56,15 @@ export default function CreateBudget({ refreshData }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <div className='bg-slate-100 p-13 w-1xs
-           rounded-md items-center flex flex-col 
-           border-2 border-dashed cursor-pointer
-            hover:bg-slate-200 hover:border-slate-900'>
-            <h2 className='text-3xl'>+</h2>
-            <h2 className='text-black font-medium'>Create New Budget</h2>
+          <div className='bg-gradient-to-br from-blue-50 to-indigo-50 p-8 w-full
+           rounded-xl items-center flex flex-col 
+           border-2 border-dashed border-blue-300 cursor-pointer
+            hover:bg-gradient-to-br hover:from-blue-100 hover:to-indigo-100 hover:border-blue-500 transition-all duration-300 transform hover:scale-105 h-[170px] justify-center'>
+            <div className='bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center mb-3 shadow-lg'>
+              <h2 className='text-2xl font-bold'>+</h2>
+            </div>
+            <h2 className='text-gray-700 font-semibold text-center'>Create New Budget</h2>
+            <p className='text-gray-500 text-sm mt-1 text-center'>Start tracking your expenses</p>
           </div>
         </DialogTrigger>
         <DialogContent>

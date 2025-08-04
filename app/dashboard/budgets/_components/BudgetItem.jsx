@@ -8,24 +8,24 @@ export default function BudgetItem({ budget }) {
   }
   return (
     <Link href={'/dashboard/expenses/' + budget?.id} >
-      <div className='p-5 border rounded-lg hover:shadow-md cursor-pointer h-[170px]'>
+      <div className='p-5 border border-gray-200 rounded-xl hover:shadow-lg cursor-pointer h-[170px] bg-gradient-to-br from-white to-gray-50 hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 transform hover:-translate-y-1'>
         <div className='flex gap-2 items-center justify-between'>
           <div className='flex gap-2 items-center'>
-            <h2 className='text-2xl p-3 px-4 bg-slate-100 rounded-full'>{budget?.icon}</h2>
+            <h2 className='text-2xl p-3 px-4 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full border border-blue-200'>{budget?.icon}</h2>
             <div>
-              <h2 className='font-bold text-black-100'>{budget.name}</h2>
-              <h2 className='text-sm text-black-100'>{budget.totalItem} Item</h2>
+              <h2 className='font-bold text-gray-800'>{budget.name}</h2>
+              <h2 className='text-sm text-gray-600'>{budget.totalItem} Item{budget.totalItem !== 1 ? 's' : ''}</h2>
             </div>
           </div>
-          <h2 className='font-bold  text-primary text-lg'>${budget.amount}</h2>
+          <h2 className='font-bold text-blue-600 text-lg'>${budget.amount}</h2>
         </div>
         <div className='mt-5'>
           <div className='flex items-center justify-between mb-5'>
-            <h2 className='text-xs text-slate-400'>${budget.totalSpend ? budget.totalSpend : 0} Spend</h2>
-            <h2 className='text-xs text-slate-400'>${budget.amount - budget.totalSpend}Remaining</h2>
+            <h2 className='text-xs text-gray-500 font-medium'>${budget.totalSpend ? budget.totalSpend : 0} Spent</h2>
+            <h2 className='text-xs text-gray-500 font-medium'>${budget.amount - (budget.totalSpend || 0)} Remaining</h2>
           </div>
-          <div className='w-full bg-slate-300 h-2 rounded-full'>
-            <div className='bg-black h-2 rounded-full'
+          <div className='w-full bg-gray-200 h-3 rounded-full overflow-hidden'>
+            <div className='bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-500 ease-out'
               style={{
                 width: `${calculateProgressPerc()}%`
               }}

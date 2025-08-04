@@ -11,12 +11,16 @@ import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../utils/dbConfig";
 import BarChartDashboard from '../dashboard/_components/BarChartDashboard'
 import BudgetItem from "./budgets/_components/BudgetItem";
-import ExpenseListTable from "./expenses/[id]/_components/ExpenseListTable";
+import PaginatedTable from '../_components/PaginatedTable';
+import DateRangeFilter from '../_components/DateRangeFilter';
+import dayjs from 'dayjs';
+
 function SideNav() {
   const { user } = useUser();
 
   const [budgetList, setBudgetList] = useState([]);
   const [expensesList, setExpensesList] = useState([]);
+  const [dateRange, setDateRange] = useState([null, null]);
   useEffect(() => {
     user && getBudgetList();
   }, [user])
@@ -131,30 +135,39 @@ function SideNav() {
             ))}
           </ul>
         </div>
-        <div className="p-5">
-          <h2 className="font-bold text-3xl md:text-4xl lg:text-5xl">Hi, {user?.fullName}</h2>
+        <div className="p-6 bg-gray-50 min-h-screen">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-8 text-white">
+            <h2 className="font-bold text-3xl md:text-4xl lg:text-5xl">Hi, {user?.fullName} 👋</h2>
+            <p className="text-blue-100 text-lg mt-2">Welcome back to your financial dashboard!</p>
+          </div>
           <br></br>
-          <p className="text-gray-500 text-sm md:text-base lg:text-lg">Welcome to your dashboard!</p>
           <div className="w-full mt-4">
             <CardInfo budgetList={budgetList} />
             <br></br>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 mt-6 gap-5">
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 space-y-6">
               <BarChartDashboard
                 budgetList={budgetList} />
-              <br></br>
-              <ExpenseListTable
+              <DateRangeFilter 
+                dateRange={dateRange}
+                onDateRangeChange={setDateRange}
+              />
+              <PaginatedTable
                 expensesList={expensesList}
+                dateRange={dateRange}
                 refreshData={() => getBudgetList()}
               />
             </div>
-            {/* <br></br> */}
-            <div className="grid gap-5 w-2xs">
-              <h2 className="font-bold text-3xl">Latest Budgets</h2>
-              {budgetList.map((budget, index) => (
-                <BudgetItem budget={budget} key={index} />
-              ))}
+            <div className="space-y-6">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h2 className="font-bold text-2xl text-gray-800 mb-4">Latest Budgets</h2>
+                <div className="space-y-4">
+                  {budgetList.slice(0, 3).map((budget, index) => (
+                    <BudgetItem budget={budget} key={index} />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
