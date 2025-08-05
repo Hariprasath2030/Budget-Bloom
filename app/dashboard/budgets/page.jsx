@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Budgets() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const route = useRouter();// State for sidebar toggle
+  const route = useRouter();
   const menuList = [
     { name: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
     { name: "Budget", icon: PiggyBank, href: "/dashboard/budgets" },
@@ -21,9 +21,9 @@ export default function Budgets() {
 
   return (
     <>
-      {/* <div className="sticky top-0 z-10 bg-white shadow-sm">
+      <div className="sticky top-0 z-10 bg-white shadow-sm">
         <DashboardHeader />
-      </div> */}
+      </div>
 
       <div className="flex">
         <div className="lg:hidden p-4">

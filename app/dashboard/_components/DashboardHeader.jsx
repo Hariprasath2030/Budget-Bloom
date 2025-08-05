@@ -35,34 +35,6 @@ function DashboardHeader() {
         </div>
       </div>
 
-      <div className="hidden md:flex justify-between items-center">
-        <div className="flex items-center space-x-3">
-          <Image
-            src={img}
-            alt="logo"
-            width={40}
-            height={40}
-            className="rounded-full ring-2 ring-blue-200"
-          />
-          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Budget Bloom
-          </h1>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <button className="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200">
-            <Bell size={22} />
-            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
-          </button>
-          <UserButton
-            appearance={{
-              elements: {
-                avatarBox: "w-10 h-10",
-              },
-            }}
-          />
-        </div>
-      </div>
     </div>
   );
 }
