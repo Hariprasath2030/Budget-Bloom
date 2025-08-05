@@ -21,9 +21,9 @@ export default function Budgets() {
 
   return (
     <>
-      <div className="sticky top-0 z-10 bg-white shadow-sm">
+      {/* <div className="sticky top-0 z-10 bg-white shadow-sm">
         <DashboardHeader />
-      </div>
+      </div> */}
 
       <div className="flex">
         <div className="lg:hidden p-4">
