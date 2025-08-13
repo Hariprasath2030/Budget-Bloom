@@ -1,8 +1,9 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Menu, X, ArrowLeft } from 'lucide-react'; // Added X for close icon
+import { Button } from '../../../components/ui/button';
 import DashboardHeader from '../_components/DashboardHeader';  // Assuming DashboardHeader is inside _components folder
 import BudgetList from './_components/BudgetList';  // Importing BudgetList component
 import { useRouter } from 'next/navigation';

@@ -10,11 +10,12 @@ import { db } from '../../../../utils/dbConfig'
 import { useUser } from '@clerk/nextjs';
 import BudgetItem from '../../budgets/_components/BudgetItem';
 import AddExpense from './_components/AddExpense';
-import PaginatedTable from '../../_components/PaginatedTable';
+import EnhancedDataTable from '../../_components/EnhancedDataTable';
 import DateRangeFilter from '../../_components/DateRangeFilter';
 import { Button } from '../../../../components/ui/button';
 import EditBudget from './_components/EditBudget';
 import dayjs from 'dayjs';
+import { toast } from 'sonner';
 
 import {
     AlertDialog,
@@ -89,6 +90,51 @@ export default function ExpensesScreen({ params }) {
         toast("Budget deleted successfully")
         route.replace('/dashboard/budgets')
     }
+
+    const deleteExpense = async (expense) => {
+        const confirmDelete = confirm("Are you sure you want to delete this expense?");
+        if (!confirmDelete) return;
+
+        try {
+            const result = await db.delete(Expenses)
+                .where(eq(Expenses.id, expense.id))
+                .returning();
+
+            if (result.length > 0) {
+                toast.success("Expense deleted successfully");
+                getBudgetInfo();
+            } else {
+                toast.error("Something went wrong");
+            }
+        } catch (error) {
+            console.error("Error deleting expense:", error);
+            toast.error("Failed to delete expense");
+        }
+    };
+
+    const expenseColumns = [
+        {
+            accessorKey: 'name',
+            header: 'Expense Name',
+            cell: ({ getValue }) => (
+                <div className="font-medium text-gray-900">{getValue()}</div>
+            ),
+        },
+        {
+            accessorKey: 'amount',
+            header: 'Amount',
+            cell: ({ getValue }) => (
+                <div className="font-bold text-green-600 text-lg">${getValue()}</div>
+            ),
+        },
+        {
+            accessorKey: 'createdAt',
+            header: 'Date',
+            cell: ({ getValue }) => (
+                <div className="font-medium text-gray-700">{getValue()}</div>
+            ),
+        },
+    ];
 
     // rest of your code (Sidebar, Hamburger Menu, etc.) is fine ✅
 
@@ -229,10 +275,15 @@ export default function ExpensesScreen({ params }) {
                             dateRange={dateRange}
                             onDateRangeChange={setDateRange}
                         />
-                        <PaginatedTable
-                            expensesList={expensesList}
+                        <EnhancedDataTable
+                            data={expensesList}
+                            columns={expenseColumns}
+                            title="Budget Expenses"
                             dateRange={dateRange}
-                            refreshData={() => getBudgetInfo()}
+                            refreshData={getBudgetInfo}
+                            onDelete={deleteExpense}
+                            enableEditing={true}
+                            showDateFilter={false}
                         />
                     </div>
                 </div>

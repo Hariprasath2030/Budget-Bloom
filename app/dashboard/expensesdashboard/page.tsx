@@ -8,9 +8,10 @@ import { Budgets, Expenses } from "../../../utils/schema";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../../utils/dbConfig";
 import DashboardHeader from '../../dashboard/_components/DashboardHeader';
-import PaginatedTable from '../_components/PaginatedTable';
+import EnhancedDataTable from '../_components/EnhancedDataTable';
 import DateRangeFilter from '../_components/DateRangeFilter';
 import dayjs from 'dayjs';
+import { toast } from 'sonner';
 
 function expensesdashboard() {
 
@@ -49,8 +50,52 @@ function expensesdashboard() {
             .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
             .orderBy(desc(Expenses.id));
         setExpensesList(result);
-
     }
+
+    const deleteExpense = async (expense) => {
+        const confirmDelete = confirm("Are you sure you want to delete this expense?");
+        if (!confirmDelete) return;
+
+        try {
+            const result = await db.delete(Expenses)
+                .where(eq(Expenses.id, expense.id))
+                .returning();
+
+            if (result.length > 0) {
+                toast.success("Expense deleted successfully");
+                getBudgetList();
+            } else {
+                toast.error("Something went wrong");
+            }
+        } catch (error) {
+            console.error("Error deleting expense:", error);
+            toast.error("Failed to delete expense");
+        }
+    };
+
+    const expenseColumns = [
+        {
+            accessorKey: 'name',
+            header: 'Expense Name',
+            cell: ({ getValue }) => (
+                <div className="font-medium text-gray-900">{getValue()}</div>
+            ),
+        },
+        {
+            accessorKey: 'amount',
+            header: 'Amount',
+            cell: ({ getValue }) => (
+                <div className="font-bold text-green-600 text-lg">${getValue()}</div>
+            ),
+        },
+        {
+            accessorKey: 'createdAt',
+            header: 'Date',
+            cell: ({ getValue }) => (
+                <div className="font-medium text-gray-700">{getValue()}</div>
+            ),
+        },
+    ];
 
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const router = useRouter();
@@ -139,10 +184,15 @@ function expensesdashboard() {
                             dateRange={dateRange}
                             onDateRangeChange={setDateRange}
                         />
-                        <PaginatedTable
-                            expensesList={expensesList}
+                        <EnhancedDataTable
+                            data={expensesList}
+                            columns={expenseColumns}
+                            title="All Expenses"
                             dateRange={dateRange}
-                            refreshData={() => getBudgetList()}
+                            refreshData={getBudgetList}
+                            onDelete={deleteExpense}
+                            enableEditing={true}
+                            showDateFilter={false}
                         />
                     </div>
                 </div>
