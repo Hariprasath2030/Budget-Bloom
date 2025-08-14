@@ -25,7 +25,7 @@ function DateRangeFilter({ dateRange, onDateRangeChange }) {
       <div className="flex items-center gap-3 mb-4">
         <div className="flex items-center gap-2">
           <Calendar className="text-blue-600" size={20} />
-          <h3 className="text-lg font-semibold text-gray-800">Date Range Filter</h3>
+          <h3 className="text-lg font-semibold text-gray-800">Set Date Range</h3>
         </div>
         {(dateRange?.[0] || dateRange?.[1]) && (
           <Button

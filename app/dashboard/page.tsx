@@ -14,6 +14,7 @@ import BudgetItem from "./budgets/_components/BudgetItem";
 import EnhancedDataTable from './_components/EnhancedDataTable';
 import DateRangeFilter from './_components/DateRangeFilter';
 import dayjs from 'dayjs';
+import { toast } from "sonner";
 
 function SideNav() {
   const { user } = useUser();
@@ -196,6 +197,7 @@ function SideNav() {
                 columns={expenseColumns}
                 title="Recent Expenses"
                 dateRange={dateRange}
+               onDateRangeChange={setDateRange} 
                 refreshData={getBudgetList}
                 onDelete={deleteExpense}
                 enableEditing={true}

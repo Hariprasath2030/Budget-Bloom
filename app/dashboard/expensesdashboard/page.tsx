@@ -189,6 +189,7 @@ function expensesdashboard() {
                             columns={expenseColumns}
                             title="All Expenses"
                             dateRange={dateRange}
+                           onDateRangeChange={setDateRange} 
                             refreshData={getBudgetList}
                             onDelete={deleteExpense}
                             enableEditing={true}

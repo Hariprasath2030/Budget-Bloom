@@ -15,7 +15,6 @@ import DateRangeFilter from '../../_components/DateRangeFilter';
 import { Button } from '../../../../components/ui/button';
 import EditBudget from './_components/EditBudget';
 import dayjs from 'dayjs';
-import { toast } from 'sonner';
 
 import {
     AlertDialog,
@@ -149,19 +148,6 @@ export default function ExpensesScreen({ params }) {
     ];
 
     const path = usePathname();
-    console.log("Current Path:", path); // Debugging
-
-    // Handle hamburger icon click to toggle the sidebar
-    const handleHamburgerClick = () => {
-        setSidebarOpen(!isSidebarOpen);
-    };
-
-    // Handle close button click to close the sidebar
-    const handleCloseSidebar = () => {
-        setSidebarOpen(false);
-    };
-
-
     return (
         <>
             {/* Header */}
@@ -170,7 +156,6 @@ export default function ExpensesScreen({ params }) {
             </div>
 
             <div className="flex">
-                {/* Hamburger (Mobile Only) */}
                 <div className="lg:hidden p-4">
                     <button onClick={() => setSidebarOpen(!isSidebarOpen)}>
                         <Menu size={24} />
@@ -268,7 +253,7 @@ export default function ExpensesScreen({ params }) {
                         <AddExpense budgetId={params.id}
                             user={user}
                             refreshData={() => getBudgetInfo()}
-                        /> {/* ✅ Pass unwrapped params */}
+                        /> 
                     </div>
                     <div className='mt-4'>
                         <DateRangeFilter 
@@ -280,6 +265,7 @@ export default function ExpensesScreen({ params }) {
                             columns={expenseColumns}
                             title="Budget Expenses"
                             dateRange={dateRange}
+                            onDateRangeChange={setDateRange} 
                             refreshData={getBudgetInfo}
                             onDelete={deleteExpense}
                             enableEditing={true}
