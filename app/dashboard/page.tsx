@@ -132,13 +132,14 @@ function SideNav() {
           </button>
         </div>
 
-        <div className="hidden lg:block h-auto p-5 w-64 bg-white border shadow-sm">
+        <div className="hidden lg:block h-auto p-5 w-64 bg-gradient-to-b from-white via-purple-50/40 to-indigo-50/40 border-2 border-purple-200 shadow-2xl">
+        <div className="hidden lg:block h-auto p-5 w-64 bg-gradient-to-b from-white via-rose-50/40 to-orange-50/40 border-2 border-rose-200 shadow-2xl">
           <ul className="mt-6 px-8 space-y-6 text-lg">
             {menuList.map((link) => (
               <li key={link.name}>
                 <Link href={link.href}>
                   <div
-                    className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-blue-600 bg-blue-100 font-semibold" : ""
+                    className={`flex items-center space-x-4 p-3 rounded-2xl transition-all duration-500 hover:text-rose-600 hover:bg-gradient-to-r hover:from-rose-100 hover:to-orange-100 hover:shadow-lg ${path === link.href ? "text-rose-600 bg-gradient-to-r from-rose-100 to-orange-100 font-semibold shadow-lg" : ""
                       }`}
                   >
                     <link.icon size={24} />
@@ -150,7 +151,7 @@ function SideNav() {
           </ul>
         </div>
         <div
-          className={`lg:hidden fixed top-0 left-0 h-screen w-64 bg-white p-5 border shadow-sm z-20 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          className={`lg:hidden fixed top-0 left-0 h-screen w-64 bg-gradient-to-b from-white via-rose-50/40 to-orange-50/40 p-5 border-2 border-rose-200 shadow-2xl z-20 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
         >
           <div className="flex justify-end">
@@ -163,7 +164,7 @@ function SideNav() {
               <li key={link.name}>
                 <Link href={link.href}>
                   <div
-                    className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-blue-600 bg-blue-100 font-semibold" : ""
+                    className={`flex items-center space-x-4 p-3 rounded-2xl transition-all duration-500 hover:text-rose-600 hover:bg-gradient-to-r hover:from-rose-100 hover:to-orange-100 hover:shadow-lg ${path === link.href ? "text-rose-600 bg-gradient-to-r from-rose-100 to-orange-100 font-semibold shadow-lg" : ""
                       }`}
                   >
                     <link.icon size={24} />
@@ -174,10 +175,16 @@ function SideNav() {
             ))}
           </ul>
         </div>
-        <div className="p-6 bg-gray-50 min-h-screen">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-8 text-white">
-            <h2 className="font-bold text-3xl md:text-4xl lg:text-5xl">Hi, {user?.fullName} 👋</h2>
-            <p className="text-blue-100 text-lg mt-2">Welcome back to your financial dashboard!</p>
+        <div className="p-6 bg-gradient-to-br from-rose-50/30 via-orange-50/30 to-amber-50/30 min-h-screen">
+          <div className="bg-gradient-to-r from-rose-600 via-orange-600 to-amber-600 rounded-3xl p-8 mb-10 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16 animate-pulse"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12 animate-pulse delay-500"></div>
+            <h2 className="font-bold text-3xl md:text-4xl lg:text-5xl relative z-10">Hi, {user?.fullName} 👋</h2>
+            <p className="text-rose-100 text-lg mt-3 relative z-10 flex items-center gap-2">
+              <Sparkles size={20} className="animate-spin" />
+              Welcome back to your financial dashboard!
+              <Star size={20} className="animate-pulse" />
+            </p>
           </div>
           <br></br> 
           <div className="w-full mt-4 animate-bounce'">
