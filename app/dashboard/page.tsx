@@ -14,8 +14,6 @@ import BudgetItem from "./budgets/_components/BudgetItem";
 import EnhancedDataTable from './_components/EnhancedDataTable';
 import DateRangeFilter from './_components/DateRangeFilter';
 import { toast } from "sonner";
-import Image from "next/image";
-import img from "../../public/exlogo.jpg";
 
 function SideNav() {
   const { user } = useUser();
@@ -121,8 +119,9 @@ function SideNav() {
     </button>
   </div>
 
-  <div
-    className={`fixed top-0 left-0 h-screen w-64 bg-white border shadow-sm z-20 transition-transform duration-300
+   <div
+    className={`fixed top-0 left-0 h-screen w-64 md:w-56 lg:w-64 bg-white border shadow-sm z-20 
+      transition-transform duration-300
       ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
   >
     <ul className="mt-20 px-5 space-y-4 text-lg">
@@ -156,10 +155,15 @@ function SideNav() {
 
 
         {/* Main Content */}
-        <div className={`w-[auto] p-4 lg:p-6 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 min-h-screen transition-all duration-300 ${isSidebarOpen ? "lg:ml-64" : "lg:ml-0"}`}>
+  <div
+    className={`flex-1 p-4 lg:p-6 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 
+      min-h-screen transition-all duration-300
+      ${isSidebarOpen ? "lg:ml-64 md:ml-56" : "ml-0"}`}
+  >
           
           {/* Welcome Card */}
-          <div className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-6 lg:p-8 mb-8 text-white shadow-2xl overflow-hidden">
+ <div className="w-full relative bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 
+        rounded-2xl p-6 lg:p-8 mb-8 text-white shadow-2xl overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
             <div className="relative z-10">
@@ -178,9 +182,9 @@ function SideNav() {
           </div>
 
           {/* Charts & Expenses */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 mt-8 gap-6">
-            <div className="xl:col-span-2 space-y-6">
-              <BarChartDashboard budgetList={budgetList} />
+             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 mt-8 gap-6">
+      <div className="xl:col-span-2 space-y-6">
+        <BarChartDashboard budgetList={budgetList} />
               <DateRangeFilter dateRange={dateRange} onDateRangeChange={setDateRange} />
               <EnhancedDataTable
                 data={expensesList}
