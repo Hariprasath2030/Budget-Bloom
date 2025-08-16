@@ -156,7 +156,7 @@ function SideNav() {
 
 
         {/* Main Content */}
-        <div className={`p-4 lg:p-6 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 min-h-screen transition-all duration-300 ${isSidebarOpen ? "lg:ml-64" : "lg:ml-0"}`}>
+        <div className={`w-[auto] p-4 lg:p-6 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 min-h-screen transition-all duration-300 ${isSidebarOpen ? "lg:ml-64" : "lg:ml-0"}`}>
           
           {/* Welcome Card */}
           <div className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-6 lg:p-8 mb-8 text-white shadow-2xl overflow-hidden">

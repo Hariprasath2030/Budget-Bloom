@@ -14,11 +14,11 @@ function DashboardHeader() {
           <Image
             src={img}
             alt="logo"
-            width={28} // smaller on mobile
-            height={28}
+            width={27} // smaller on mobile
+            height={27}
             className="rounded-full ring-1 ring-green-400"
           />
-          <h1 className="text-sm sm:text-lg md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-lg sm:text-lg md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Budget Bloom
           </h1>
         </div>
