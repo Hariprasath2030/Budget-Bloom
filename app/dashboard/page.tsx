@@ -2,35 +2,36 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Menu, X } from "lucide-react"; // Added X for close icon
-import DashboardHeader from '../dashboard/_components/DashboardHeader'; // Corrected typo
-import { useUser } from "@clerk/nextjs";
+import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Menu, X, Bell } from "lucide-react";
+import DashboardHeader from '../dashboard/_components/DashboardHeader';
+import { UserButton, useUser } from "@clerk/nextjs";
 import CardInfo from '../dashboard/_components/CardInfo';
 import { Budgets, Expenses } from "../../utils/schema";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "../../utils/dbConfig";
-import BarChartDashboard from '../dashboard/_components/BarChartDashboard'
+import BarChartDashboard from '../dashboard/_components/BarChartDashboard';
 import BudgetItem from "./budgets/_components/BudgetItem";
 import EnhancedDataTable from './_components/EnhancedDataTable';
 import DateRangeFilter from './_components/DateRangeFilter';
-import dayjs from 'dayjs';
 import { toast } from "sonner";
+import Image from "next/image";
+import img from "../../public/exlogo.jpg";
 
 function SideNav() {
   const { user } = useUser();
-
   const [budgetList, setBudgetList] = useState([]);
   const [expensesList, setExpensesList] = useState([]);
   const [dateRange, setDateRange] = useState([null, null]);
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const path = usePathname();
+
   useEffect(() => {
     user && getBudgetList();
-  }, [user])
+  }, [user]);
 
   const getBudgetList = async () => {
-
     const result = await db.select({
       ...getTableColumns(Budgets),
-
       totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
       totalItem: sql`count(${Expenses.id})`.mapWith(Number)
     }).from(Budgets)
@@ -41,7 +42,7 @@ function SideNav() {
 
     setBudgetList(result);
     getAllExpenses();
-  }
+  };
 
   const getAllExpenses = async () => {
     const result = await db.select({
@@ -54,7 +55,7 @@ function SideNav() {
       .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
       .orderBy(desc(Expenses.id));
     setExpensesList(result);
-  }
+  };
 
   const deleteExpense = async (expense) => {
     const confirmDelete = confirm("Are you sure you want to delete this expense?");
@@ -78,30 +79,11 @@ function SideNav() {
   };
 
   const expenseColumns = [
-    {
-      accessorKey: 'name',
-      header: 'Expense Name',
-      cell: ({ getValue }) => (
-        <div className="font-medium text-gray-900">{getValue()}</div>
-      ),
-    },
-    {
-      accessorKey: 'amount',
-      header: 'Amount',
-      cell: ({ getValue }) => (
-        <div className="font-bold text-green-600 text-lg">${getValue()}</div>
-      ),
-    },
-    {
-      accessorKey: 'createdAt',
-      header: 'Date',
-      cell: ({ getValue }) => (
-        <div className="font-medium text-gray-700">{getValue()}</div>
-      ),
-    },
+    { accessorKey: 'name', header: 'Expense Name', cell: ({ getValue }) => <div className="font-medium text-gray-900">{getValue()}</div> },
+    { accessorKey: 'amount', header: 'Amount', cell: ({ getValue }) => <div className="font-bold text-green-600 text-lg">${getValue()}</div> },
+    { accessorKey: 'createdAt', header: 'Date', cell: ({ getValue }) => <div className="font-medium text-gray-700">{getValue()}</div> },
   ];
 
-  const [isSidebarOpen, setSidebarOpen] = useState(false); // State for sidebar toggle
   const menuList = [
     { name: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
     { name: "Budget", icon: PiggyBank, href: "/dashboard/budgets" },
@@ -109,72 +91,74 @@ function SideNav() {
     { name: "About us", icon: ShieldCheck, href: "/dashboard/about" },
   ];
 
-  const path = usePathname();
-
-  const handleHamburgerClick = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleCloseSidebar = () => {
-    setSidebarOpen(false);
-  };
-
   return (
     <>
-      <div className="sticky top-0 z-10 bg-white shadow-sm">
+          <div className="sticky top-0 z-10 bg-white shadow-sm">
         <DashboardHeader />
       </div>
+   <div className="flex">
+  <div className="hidden lg:flex fixed top-2 left-2 items-center z-30 space-x-3">
+    <button
+      onClick={() => setSidebarOpen(!isSidebarOpen)}
+      className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 flex items-center justify-center"
+    >
+      {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+    </button>
+    
+    {isSidebarOpen && (
+      <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+        Budget Bloom
+      </h1>
+    )}
+  </div>
+  <div className="lg:hidden fixed top-1 left-1 z-30">
+    <button
+      onClick={() => setSidebarOpen(!isSidebarOpen)}
+      className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
+    >
+    
+      {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+    </button>
+  </div>
 
-      <div className="flex">
-        <div className="lg:hidden p-4">
-          <button onClick={() => setSidebarOpen(!isSidebarOpen)}>
-            <Menu size={24} />
-          </button>
-        </div>
+  <div
+    className={`fixed top-0 left-0 h-screen w-64 bg-white border shadow-sm z-20 transition-transform duration-300
+      ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+  >
+    <ul className="mt-20 px-5 space-y-4 text-lg">
+      {menuList.map((link) => (
+        <li key={link.name}>
+          <Link href={link.href}>
+            <div
+              className={`flex items-center space-x-3 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100
+                ${path === link.href ? "text-blue-600 bg-blue-100 font-semibold" : ""}`}
+            >
+              <link.icon size={24} />
+              <span>{link.name}</span>
+            </div>
+          </Link>
+        </li>
+      ))}
+    </ul>
 
-        <div className="hidden lg:block h-auto p-5 w-64 bg-white border shadow-sm">
-          <ul className="mt-6 px-8 space-y-6 text-lg">
-            {menuList.map((link) => (
-              <li key={link.name}>
-                <Link href={link.href}>
-                  <div
-                    className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-blue-600 bg-blue-100 font-semibold" : ""
-                      }`}
-                  >
-                    <link.icon size={24} />
-                    <span>{link.name}</span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div
-          className={`lg:hidden fixed top-0 left-0 h-screen w-64 bg-white p-5 border shadow-sm z-20 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-        >
-          <div className="flex justify-end">
-            <button onClick={() => setSidebarOpen(false)}>
-              <X size={24} />
-            </button>
-          </div>
-          <ul className="mt-10 px-4 space-y-6 text-lg">
-            {menuList.map((link) => (
-              <li key={link.name}>
-                <Link href={link.href}>
-                  <div
-                    className={`flex items-center space-x-4 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100 ${path === link.href ? "text-blue-600 bg-blue-100 font-semibold" : ""
-                      }`}
-                  >
-                    <link.icon size={24} />
-                    <span>{link.name}</span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="p-4 lg:p-6 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 min-h-screen">
+    {/* User info */}
+    <div className="absolute bottom-5 left-5 right-5 flex items-center space-x-3">
+      <UserButton
+        appearance={{
+          elements: {
+            avatarBox: "w-8 h-8",
+          },
+        }}
+      />
+      <span className="text-sm font-medium text-gray-800 truncate">{user?.fullName}</span>
+    </div>
+  </div>
+
+
+        {/* Main Content */}
+        <div className={`p-4 lg:p-6 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 min-h-screen transition-all duration-300 ${isSidebarOpen ? "lg:ml-64" : "lg:ml-0"}`}>
+          
+          {/* Welcome Card */}
           <div className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-6 lg:p-8 mb-8 text-white shadow-2xl overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
@@ -187,31 +171,31 @@ function SideNav() {
               </div>
             </div>
           </div>
-          
+
+          {/* Card Info */}
           <div className="w-full mt-6">
             <CardInfo budgetList={budgetList} />
           </div>
-          
+
+          {/* Charts & Expenses */}
           <div className="grid grid-cols-1 xl:grid-cols-3 mt-8 gap-6">
             <div className="xl:col-span-2 space-y-6">
-              <BarChartDashboard
-                budgetList={budgetList} />
-              <DateRangeFilter 
-                dateRange={dateRange}
-                onDateRangeChange={setDateRange}
-              />
+              <BarChartDashboard budgetList={budgetList} />
+              <DateRangeFilter dateRange={dateRange} onDateRangeChange={setDateRange} />
               <EnhancedDataTable
                 data={expensesList}
                 columns={expenseColumns}
                 title="Recent Expenses"
                 dateRange={dateRange}
-               onDateRangeChange={setDateRange} 
+                onDateRangeChange={setDateRange}
                 refreshData={getBudgetList}
                 onDelete={deleteExpense}
                 enableEditing={true}
                 showDateFilter={false}
               />
             </div>
+
+            {/* Latest Budgets */}
             <div className="space-y-6">
               <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300">
                 <div className="flex items-center gap-3 mb-6">
@@ -226,10 +210,9 @@ function SideNav() {
               </div>
             </div>
           </div>
+
         </div>
       </div>
-
-
     </>
   );
 }

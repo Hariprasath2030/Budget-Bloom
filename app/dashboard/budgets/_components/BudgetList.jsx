@@ -41,7 +41,7 @@ export default function BudgetList() {
 
   return (
     <div className="mt-9">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <CreateBudget
           refreshData={getBudgetList}
           parentOptions={budgetList.map((b) => ({ id: b.id, name: b.name }))}

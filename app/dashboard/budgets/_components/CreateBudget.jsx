@@ -17,7 +17,8 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { db } from "../../../../utils/dbConfig";
 import { Budgets } from "../../../../utils/schema";
-import { Sparkles, TrendingUp, Target } from "lucide-react";
+import { Sparkles, Target } from "lucide-react";
+import { Plus } from "lucide-react";
 
 export default function CreateBudget({ refreshData, parentOptions }) {
   const [emojiIcon, setEmojiIcon] = useState("😊");
@@ -38,11 +39,11 @@ export default function CreateBudget({ refreshData, parentOptions }) {
       const result = await db
         .insert(Budgets)
         .values({
-          name: name,
+          name,
           amount: Number(amount),
           createdBy: user?.primaryEmailAddress?.emailAddress || "Anonymous",
           icon: emojiIcon,
-          parentId: parentId || null, // NEW: Save parentId if selected
+          parentId: parentId || null,
         })
         .returning({ insertedId: Budgets.id });
 
@@ -71,46 +72,43 @@ export default function CreateBudget({ refreshData, parentOptions }) {
           >
             <div className="absolute top-0 right-0 w-20 h-20 bg-violet-200/30 rounded-full -translate-y-10 translate-x-10 group-hover:scale-150 transition-transform duration-500"></div>
             <div className="absolute bottom-0 left-0 w-16 h-16 bg-purple-300/20 rounded-full translate-y-8 -translate-x-8 group-hover:scale-125 transition-transform duration-500"></div>
-            
+
             <div className="relative bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 text-white rounded-2xl w-14 h-14 flex items-center justify-center mb-4 shadow-2xl group-hover:rotate-12 transition-all duration-300">
               <h2 className="text-3xl font-bold">+</h2>
-              <Sparkles className="absolute -top-1 -right-1 text-yellow-300 animate-pulse" size={16} />
+              <Sparkles
+                className="absolute -top-1 -right-1 text-yellow-300 animate-pulse"
+                size={16}
+              />
             </div>
-            
+
             <h2 className="text-gray-800 font-bold text-lg text-center relative z-10">
               Create New Budget
             </h2>
             <p className="text-gray-600 text-sm mt-2 text-center relative z-10 font-medium">
               Start tracking your expenses
             </p>
-            
-            <div className="flex items-center gap-1 mt-3 text-violet-600 opacity-0 group-hover:opacity-100 transition-all duration-300">
-              <Target size={14} />
-              <span className="text-xs font-medium">Set your financial goals</span>
-            </div>
           </div>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-md lg:max-w-lg bg-gradient-to-br from-white to-violet-50 border-violet-200">
+
+        <DialogContent className="sm:max-w-md lg:max-w-lg w-full bg-gradient-to-br from-white to-violet-50 border-violet-200 max-h-[90vh] overflow-y-auto p-6 sm:p-8">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
               <Sparkles className="text-violet-500" size={24} />
               Create New Budget
             </DialogTitle>
-            <DialogDescription>
-              <div className="mt-6 space-y-6">
-                <div className="text-center">
-                  <p className="text-gray-600 mb-4">Choose an icon for your budget</p>
-                  <Button
-                    variant="outline"
-                    className="text-3xl h-16 w-16 rounded-2xl border-2 border-violet-200 hover:border-violet-400 hover:bg-violet-50 transition-all duration-300 hover:scale-110"
-                    onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
-                  >
-                    {emojiIcon}
-                  </Button>
-                </div>
-                
+            <DialogDescription className="mt-4 space-y-6">
+              {/* Emoji Picker */}
+              <div className="text-center relative">
+                <p className="text-gray-600 mb-4">Choose an icon for your budget</p>
+                <Button
+                  variant="outline"
+                  className="text-3xl h-16 w-16 rounded-2xl border-2 border-violet-200 hover:border-violet-400 hover:bg-violet-50 transition-all duration-300 hover:scale-110"
+                  onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
+                >
+                  {emojiIcon}
+                </Button>
                 {openEmojiPicker && (
-                  <div className="absolute right-0 top-0 z-50 rounded-2xl overflow-hidden shadow-2xl">
+                  <div className="absolute z-50 top-20 left-1/2 -translate-x-1/2 shadow-2xl rounded-2xl">
                     <EmojiPicker
                       onEmojiClick={(e) => {
                         setEmojiIcon(e.emoji);
@@ -119,81 +117,64 @@ export default function CreateBudget({ refreshData, parentOptions }) {
                     />
                   </div>
                 )}
+              </div>
 
-                <div className="space-y-2">
-                  <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Budget Name</h2>
-                  <Input
-                    placeholder="Enter Budget Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="h-12 border-violet-200 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
-                  />
-                </div>
+              {/* Budget Name */}
+              <div className="space-y-2">
+                <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Budget Name</h2>
+                <Input
+                  placeholder="Enter Budget Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="h-12 border-violet-200 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
+                />
+              </div>
 
-                <div className="space-y-2">
-                  <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Budget Amount</h2>
-                  <Input
-                    type="number"
-                    placeholder="Enter Budget Amount"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="h-12 border-violet-200 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Parent Budget</h2>
-                  <select
-                    value={parentId}
-                    onChange={(e) => setParentId(e.target.value)}
-                    className="
-                      w-full 
-                      border border-violet-200 
-                      p-3 
-                      rounded-xl 
-                      text-sm lg:text-base 
-                      focus:outline-none 
-                      focus:ring-2 
-                      focus:ring-violet-400 
-                      focus:border-violet-400
-                      transition-all 
-                      duration-200
-                      bg-white
-                      h-12
-                    "
-                  >
-                    <option value="">Make this a Parent Budget</option>
-                    {parentOptions.map((parent) => (
-                      <option
-                        key={parent.id}
-                        value={parent.id}
-                        className="text-gray-700"
-                      >
-                        Child of {parent.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                
-                {/* Preview Section */}
-                {(name || amount) && (
-                  <div className="mt-6 p-4 bg-gradient-to-r from-violet-100 to-purple-100 rounded-xl border border-violet-200">
-                    <h3 className="text-sm font-bold text-violet-800 mb-3 flex items-center gap-2">
-                      <Target size={16} />
-                      Budget Preview
-                    </h3>
-                    <div className="flex items-center gap-3">
-                      <div className="text-2xl bg-white p-2 rounded-lg shadow-sm">
-                        {emojiIcon}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-800">{name || "Budget Name"}</p>
-                        <p className="text-violet-600 font-bold">${amount || "0"}</p>
-                      </div>
+              {/* Budget Amount */}
+              <div className="space-y-2">
+                <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Budget Amount</h2>
+                <Input
+                  type="number"
+                  placeholder="Enter Budget Amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="h-12 border-violet-200 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
+                />
+              </div>
+
+              {/* Parent Budget */}
+              <div className="space-y-2">
+                <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Parent Budget</h2>
+                <select
+                  value={parentId}
+                  onChange={(e) => setParentId(e.target.value)}
+                  className="w-full border border-violet-200 p-3 rounded-xl text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 bg-white h-12"
+                >
+                  <option value="">Make this a Parent Budget</option>
+                  {parentOptions.map((parent) => (
+                    <option key={parent.id} value={parent.id} className="text-gray-700">
+                      Child of {parent.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Preview */}
+              {(name || amount) && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-violet-100 to-purple-100 rounded-xl border border-violet-200">
+                  <h3 className="text-sm font-bold text-violet-800 mb-3 flex items-center gap-2">
+                    <Target size={16} />
+                    Budget Preview
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <div className="text-2xl bg-white p-2 rounded-lg shadow-sm">{emojiIcon}</div>
+                    <div>
+                      <p className="font-semibold text-gray-800">{name || "Budget Name"}</p>
+                      <p className="text-violet-600 font-bold">₹{amount || "0"}</p>
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </DialogDescription>
           </DialogHeader>
 

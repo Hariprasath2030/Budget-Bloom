@@ -36,7 +36,7 @@ function BarChartDashboard({ budgetList }) {
               top: 20,
               right: 30,
               left: 20,
-              bottom: 20
+              bottom: 10
             }}
           >
             <XAxis 
