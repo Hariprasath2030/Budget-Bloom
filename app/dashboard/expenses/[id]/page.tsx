@@ -198,13 +198,15 @@ export default function ExpensesScreen({ params }) {
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent className="rounded-2xl border-red-200">
-                    <AlertDialogHeader>
-                      <AlertDialogTitle className="text-red-600">Are you absolutely sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete your budget and all its expenses.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
+                <AlertDialogHeader className="space-y-2">
+                    <AlertDialogTitle className="text-red-600 text-lg">
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+      <AlertDialogDescription className="text-gray-700">
+  This action cannot be undone. This will permanently delete your budget and all its expenses.
+</AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="flex justify-end gap-2">
                       <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
                       <AlertDialogAction onClick={deleteBudget} className="bg-red-600 hover:bg-red-700 rounded-xl">
                         Continue
