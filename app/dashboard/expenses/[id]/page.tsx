@@ -209,9 +209,80 @@ export default function ExpensesScreen({ params }) {
                 </div>
 
                 {/* Page Content */}
-                <div className="p-4 sm:p-10 w-full">
-                    <h2 className="font-bold text-2xl sm:text-3xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <span className="flex gap-2 items-center text-gray-800">
+                <div className="p-4 sm:p-10 w-full bg-gradient-to-br from-violet-50/30 via-purple-50/20 to-indigo-50/30 min-h-screen">
+                    <div className="bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-6 mb-8 text-white shadow-2xl">
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <span className="flex gap-3 items-center">
+                                <ArrowLeft onClick={() => route.back()} className="cursor-pointer hover:scale-110 transition-transform duration-200" />
+                                <div>
+                                    <h2 className="font-bold text-2xl sm:text-3xl">My Expenses</h2>
+                                    <p className="text-violet-100 text-sm mt-1">Manage your budget expenses</p>
+                                </div>
+                            </span>
+
+                            {/* Buttons / Controls - Stack under on mobile */}
+                            <div className="flex gap-3 items-center">
+                                <EditBudget
+                                    budgetInfo={budgetInfo}
+                                    refreshData={() => getBudgetInfo()}
+                                />
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button className="flex gap-2 bg-red-500 hover:bg-red-600 transition-all duration-200 hover:scale-105" variant="destructive" size="sm">
+                                            <Trash />Delete Budget
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="rounded-2xl border-red-200">
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle className="text-red-600">Are you absolutely sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently delete your current budget along with all its expenses
+                                                and remove your data from our servers.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => deleteBudget()} className="bg-red-600 hover:bg-red-700 rounded-xl">Continue</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 mt-6 gap-6">
+                        {budgetInfo ? (
+                            <BudgetItem budget={budgetInfo} />
+                        ) : (
+                            <div className="h-[200px] w-full bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl animate-pulse flex items-center justify-center">
+                                <span className="text-gray-500 font-medium">Loading budget...</span>
+                            </div>
+                        )}
+                        <AddExpense budgetId={params.id}
+                            user={user}
+                            refreshData={() => getBudgetInfo()}
+                        /> 
+                    </div>
+                    <div className='mt-8'>
+                        <DateRangeFilter 
+                            dateRange={dateRange}
+                            onDateRangeChange={setDateRange}
+                        />
+                        <div className="mt-6">
+                            <EnhancedDataTable
+                                data={expensesList}
+                                columns={expenseColumns}
+                                title="Budget Expenses"
+                                dateRange={dateRange}
+                                onDateRangeChange={setDateRange} 
+                                refreshData={getBudgetInfo}
+                                onDelete={deleteExpense}
+                                enableEditing={true}
+                                showDateFilter={false}
+                            />
+                        </div>
+                    </div>
+                </div>
                             <ArrowLeft onClick={() => route.back()} className="cursor-pointer" />
                             My Expense
                         </span>

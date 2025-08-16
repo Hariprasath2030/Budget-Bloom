@@ -171,15 +171,18 @@ function expensesdashboard() {
                     </ul>
                 </div>
                 {/* Page Content */}
-                <div className="p-6 w-full bg-gray-50 min-h-screen">
-                    <h2 className="font-bold text-3xl flex justify-between items-center text-gray-800 mb-6">
-                        <span className="flex gap-2 items-center">
-                            <ArrowLeft onClick={() => router.back()} className="cursor-pointer" />
-                            My Expense List
-                        </span>
-                    </h2>
+                <div className="p-6 w-full bg-gradient-to-br from-rose-50/30 via-pink-50/20 to-rose-50/30 min-h-screen">
+                    <div className="bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600 rounded-2xl p-6 mb-8 text-white shadow-2xl">
+                        <div className="flex gap-3 items-center">
+                            <ArrowLeft onClick={() => router.back()} className="cursor-pointer hover:scale-110 transition-transform duration-200" />
+                            <div>
+                                <h2 className="font-bold text-2xl lg:text-3xl">My Expense List</h2>
+                                <p className="text-rose-100 text-sm mt-1">View and manage all your expenses</p>
+                            </div>
+                        </div>
+                    </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                         <DateRangeFilter 
                             dateRange={dateRange}
                             onDateRangeChange={setDateRange}

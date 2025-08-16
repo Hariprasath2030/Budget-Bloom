@@ -75,13 +75,15 @@ export default function Budgets() {
           </ul>
         </div>  
         <div className="p-10 w-full">
-          <h2 className="font-bold text-3xl">
-            <span className='flex gap-2 items-center'>
-              <ArrowLeft onClick={() => route.back()} className='cursor-pointer'>
-              </ArrowLeft>
-              Budgets
-            </span>
-          </h2>
+          <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 rounded-2xl p-6 mb-8 text-white shadow-2xl">
+            <div className='flex gap-3 items-center'>
+              <ArrowLeft onClick={() => route.back()} className='cursor-pointer hover:scale-110 transition-transform duration-200' />
+              <div>
+                <h2 className="font-bold text-2xl lg:text-3xl">Budget Management</h2>
+                <p className="text-emerald-100 text-sm mt-1">Create and manage your budgets</p>
+              </div>
+            </div>
+          </div>
           <BudgetList />
         </div>
       </div>

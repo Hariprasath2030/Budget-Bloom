@@ -174,18 +174,26 @@ function SideNav() {
             ))}
           </ul>
         </div>
-        <div className="p-6 bg-gray-50 min-h-screen">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-8 text-white">
-            <h2 className="font-bold text-3xl md:text-4xl lg:text-5xl">Hi, {user?.fullName} 👋</h2>
-            <p className="text-blue-100 text-lg mt-2">Welcome back to your financial dashboard!</p>
+        <div className="p-4 lg:p-6 bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 min-h-screen">
+          <div className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-6 lg:p-8 mb-8 text-white shadow-2xl overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+            <div className="relative z-10">
+              <h2 className="font-bold text-2xl md:text-4xl lg:text-5xl">Hi, {user?.fullName} 👋</h2>
+              <p className="text-violet-100 text-base lg:text-lg mt-2">Welcome back to your financial dashboard!</p>
+              <div className="mt-4 flex items-center gap-2">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span className="text-sm text-violet-200">Live data updates</span>
+              </div>
+            </div>
           </div>
-          <br></br> 
-          <div className="w-full mt-4 animate-bounce'">
+          
+          <div className="w-full mt-6">
             <CardInfo budgetList={budgetList} />
-            <br></br>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 mt-6 gap-5">
-            <div className="md:col-span-2 space-y-6">
+          
+          <div className="grid grid-cols-1 xl:grid-cols-3 mt-8 gap-6">
+            <div className="xl:col-span-2 space-y-6">
               <BarChartDashboard
                 budgetList={budgetList} />
               <DateRangeFilter 
@@ -205,8 +213,11 @@ function SideNav() {
               />
             </div>
             <div className="space-y-6">
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h2 className="font-bold text-2xl text-gray-800 mb-4">Latest Budgets</h2>
+              <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200 hover:shadow-2xl transition-all duration-300">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-1 h-6 bg-gradient-to-b from-violet-500 to-purple-500 rounded-full"></div>
+                  <h2 className="font-bold text-xl lg:text-2xl text-gray-800">Latest Budgets</h2>
+                </div>
                 <div className="space-y-4">
                   {budgetList.slice(0, 3).map((budget, index) => (
                     <BudgetItem budget={budget} key={index} />

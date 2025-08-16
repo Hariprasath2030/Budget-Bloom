@@ -63,19 +63,31 @@ const EditableCell = ({ getValue, row, column, table }) => {
   if (isEditing) {
     return (
       <div className="flex items-center gap-2">
-        <Input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onBlur={onBlur}
-          onKeyDown={onKeyDown}
-          className="h-8 text-sm"
-          autoFocus
-        />
+        {column.id === 'createdAt' ? (
+          <Input
+            type="date"
+            value={value ? dayjs(value, "DD/MM/YYYY").format('YYYY-MM-DD') : ''}
+            onChange={(e) => setValue(dayjs(e.target.value).format('DD/MM/YYYY'))}
+            onBlur={onBlur}
+            onKeyDown={onKeyDown}
+            className="h-8 text-sm"
+            autoFocus
+          />
+        ) : (
+          <Input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onBlur={onBlur}
+            onKeyDown={onKeyDown}
+            className="h-8 text-sm"
+            autoFocus
+          />
+        )}
         <Button
           size="sm"
           variant="ghost"
           onClick={onBlur}
-          className="h-6 w-6 p-0 text-green-600 hover:text-green-700"
+          className="h-6 w-6 p-0 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
         >
           <Check size={14} />
         </Button>
@@ -86,7 +98,7 @@ const EditableCell = ({ getValue, row, column, table }) => {
             setValue(initialValue);
             setIsEditing(false);
           }}
-          className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+          className="h-6 w-6 p-0 text-rose-600 hover:text-rose-700 hover:bg-rose-50"
         >
           <X size={14} />
         </Button>
@@ -96,13 +108,13 @@ const EditableCell = ({ getValue, row, column, table }) => {
 
   return (
     <div
-      className="flex items-center justify-between group cursor-pointer hover:bg-gray-50 p-1 rounded"
+      className="flex items-center justify-between group cursor-pointer hover:bg-gradient-to-r hover:from-violet-50 hover:to-purple-50 p-2 rounded-lg transition-all duration-200"
       onClick={() => setIsEditing(true)}
     >
-      <span className="flex-1">{value}</span>
+      <span className="flex-1 font-medium">{value}</span>
       <Edit3
         size={14}
-        className="opacity-0 group-hover:opacity-100 text-gray-400 transition-opacity"
+        className="opacity-0 group-hover:opacity-100 text-violet-400 transition-all duration-200"
       />
     </div>
   );
@@ -135,7 +147,7 @@ function EnhancedDataTable({
             type="checkbox"
             checked={table.getIsAllPageRowsSelected()}
             onChange={(e) => table.toggleAllPageRowsSelected(e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            className="rounded border-violet-300 text-violet-600 focus:ring-violet-500 w-4 h-4"
           />
         ),
         cell: ({ row }) => (
@@ -143,7 +155,7 @@ function EnhancedDataTable({
             type="checkbox"
             checked={row.getIsSelected()}
             onChange={(e) => row.toggleSelected(e.target.checked)}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            className="rounded border-violet-300 text-violet-600 focus:ring-violet-500 w-4 h-4"
           />
         ),
         enableSorting: false,
@@ -153,7 +165,7 @@ function EnhancedDataTable({
         ...col,
         cell:
           enableEditing &&
-          (col.accessorKey === "name" || col.accessorKey === "amount")
+          (col.accessorKey === "name" || col.accessorKey === "amount" || col.accessorKey === "createdAt")
             ? EditableCell
             : col.cell || (({ getValue }) => getValue()),
       })),
@@ -168,7 +180,7 @@ function EnhancedDataTable({
             variant="ghost"
             size="sm"
             onClick={() => onDelete(row.original)}
-            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="h-8 w-8 p-0 text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-full transition-all duration-200"
           >
             <Trash2 size={14} />
           </Button>
@@ -216,18 +228,20 @@ function EnhancedDataTable({
     },
     meta: {
       updateData: async (rowIndex, columnId, value) => {
-        const row = data[rowIndex];
+        const row = filteredData[rowIndex];
         if (!row) return;
 
         try {
+          const updateData = { [columnId]: value };
+          
           const result = await db
             .update(Expenses)
-            .set({ [columnId]: value })
+            .set(updateData)
             .where(eq(Expenses.id, row.id))
             .returning();
 
           if (result.length > 0) {
-            toast.success(`${columnId} updated successfully`);
+            toast.success(`${columnId === 'createdAt' ? 'Date' : columnId} updated successfully`);
             refreshData && refreshData();
           } else {
             toast.error("Failed to update");
@@ -265,11 +279,12 @@ function EnhancedDataTable({
   return (
     <div className="space-y-6">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white">
+      <div className="bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-xl">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold">{title}</h2>
-            <p className="text-blue-100 mt-1">
+          <div className="relative">
+            <div className="absolute -top-2 -left-2 w-8 h-8 bg-white/20 rounded-full animate-pulse"></div>
+            <h2 className="text-2xl lg:text-3xl font-bold relative z-10">{title}</h2>
+            <p className="text-violet-100 mt-2 text-sm lg:text-base">
               {selectedData.length > 0
                 ? `${selectedData.length} of ${data.length} rows selected`
                 : `${data.length} total records`}
@@ -280,7 +295,7 @@ function EnhancedDataTable({
             <div className="flex flex-wrap gap-2">
               <Button
                 onClick={() => handleExport("pdf")}
-                className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+                className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
                 size="sm"
               >
                 <FileText size={16} className="mr-2" />
@@ -288,7 +303,7 @@ function EnhancedDataTable({
               </Button>
               <Button
                 onClick={() => handleExport("excel")}
-                className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+                className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
                 size="sm"
               >
                 <FileSpreadsheet size={16} className="mr-2" />
@@ -296,7 +311,7 @@ function EnhancedDataTable({
               </Button>
               <Button
                 onClick={() => handleExport("csv")}
-                className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+                className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
                 size="sm"
               >
                 <File size={16} className="mr-2" />
@@ -308,29 +323,29 @@ function EnhancedDataTable({
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
         <div className="flex flex-col lg:flex-row gap-4">
           {showSearch && (
             <div className="flex-1">
               <div className="relative">
                 <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-violet-400"
                   size={20}
                 />
                 <Input
                   placeholder="Search across all columns..."
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="pl-10 h-11"
+                  className="pl-10 h-12 border-violet-200 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
                 />
               </div>
             </div>
           )}
 
           {showDateFilter && onDateRangeChange && (
-            <div className="flex items-center gap-2">
-              <Calendar className="text-gray-400" size={20} />
-              <span className="text-sm text-gray-600 whitespace-nowrap">
+            <div className="flex items-center gap-2 bg-gradient-to-r from-violet-50 to-purple-50 px-4 py-2 rounded-xl">
+              <Calendar className="text-violet-500" size={20} />
+              <span className="text-sm text-violet-700 whitespace-nowrap font-medium">
                 Set Date Range
               </span>
             </div>
@@ -338,9 +353,9 @@ function EnhancedDataTable({
         </div>
 
         {selectedData.length > 0 && (
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-blue-700 font-medium">
+          <div className="mt-4 p-4 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border border-violet-200">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <span className="text-sm text-violet-700 font-medium">
                 {selectedData.length} rows selected
               </span>
               <div className="flex gap-2">
@@ -348,14 +363,14 @@ function EnhancedDataTable({
                   size="sm"
                   variant="outline"
                   onClick={() => setRowSelection({})}
-                  className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                  className="text-violet-600 border-violet-200 hover:bg-violet-50"
                 >
                   Clear Selection
                 </Button>
                 <Button
                   size="sm"
                   onClick={() => handleExport("pdf")}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white"
                 >
                   <Download size={14} className="mr-1" />
                   Export Selected
@@ -366,16 +381,16 @@ function EnhancedDataTable({
         )}
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+            <thead className="bg-gradient-to-r from-violet-100 via-purple-100 to-indigo-100 border-b border-violet-200">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-6 py-4 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+                      className="px-4 lg:px-6 py-4 text-left text-sm font-bold text-violet-800 cursor-pointer hover:bg-violet-200 transition-all duration-200"
                       onClick={
                         header.column.getCanSort()
                           ? header.column.getToggleSortingHandler()
@@ -395,7 +410,7 @@ function EnhancedDataTable({
                               size={12}
                               className={`${
                                 header.column.getIsSorted() === "asc"
-                                  ? "text-blue-600"
+                                  ? "text-violet-600"
                                   : "text-gray-400"
                               }`}
                             />
@@ -403,7 +418,7 @@ function EnhancedDataTable({
                               size={12}
                               className={`${
                                 header.column.getIsSorted() === "desc"
-                                  ? "text-blue-600"
+                                  ? "text-violet-600"
                                   : "text-gray-400"
                               } -mt-1`}
                             />
@@ -415,13 +430,13 @@ function EnhancedDataTable({
                 </tr>
               ))}
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-violet-100">
               {table.getRowModel().rows.map((row, index) => (
                 <tr
                   key={row.id}
-                  className={`hover:bg-gray-50 transition-colors ${
+                  className={`hover:bg-gradient-to-r hover:from-violet-50 hover:to-purple-50 transition-all duration-200 ${
                     row.getIsSelected()
-                      ? "bg-blue-50"
+                      ? "bg-gradient-to-r from-violet-100 to-purple-100"
                       : index % 2 === 0
                       ? "bg-white"
                       : "bg-gray-50/50"
@@ -430,7 +445,7 @@ function EnhancedDataTable({
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className="px-6 py-4 text-sm text-gray-900"
+                      className="px-4 lg:px-6 py-4 text-sm text-gray-900"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -444,14 +459,14 @@ function EnhancedDataTable({
           </table>
         </div>
 
-        <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="bg-gradient-to-r from-violet-50 to-purple-50 px-4 lg:px-6 py-4 border-t border-violet-200">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-sm text-violet-700">
               <span>Show</span>
               <select
                 value={table.getState().pagination.pageSize}
                 onChange={(e) => table.setPageSize(Number(e.target.value))}
-                className="border border-gray-300 rounded px-2 py-1 text-sm"
+                className="border border-violet-300 rounded-lg px-3 py-1 text-sm bg-white focus:ring-2 focus:ring-violet-400"
               >
                 {[10, 20, 30, 40, 50].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
@@ -468,6 +483,7 @@ function EnhancedDataTable({
                 size="sm"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
+                className="border-violet-200 text-violet-600 hover:bg-violet-50"
               >
                 Previous
               </Button>
@@ -486,7 +502,7 @@ function EnhancedDataTable({
                     if (index > 0 && array[index - 1] !== page - 1) {
                       return (
                         <React.Fragment key={`ellipsis-${page}`}>
-                          <span className="px-2 text-gray-400">...</span>
+                          <span className="px-2 text-violet-400">...</span>
                           <Button
                             variant={
                               table.getState().pagination.pageIndex + 1 === page
@@ -495,7 +511,11 @@ function EnhancedDataTable({
                             }
                             size="sm"
                             onClick={() => table.setPageIndex(page - 1)}
-                            className="w-8 h-8 p-0"
+                            className={`w-8 h-8 p-0 ${
+                              table.getState().pagination.pageIndex + 1 === page
+                                ? "bg-gradient-to-r from-violet-600 to-purple-600"
+                                : "border-violet-200 text-violet-600 hover:bg-violet-50"
+                            }`}
                           >
                             {page}
                           </Button>
@@ -512,7 +532,11 @@ function EnhancedDataTable({
                         }
                         size="sm"
                         onClick={() => table.setPageIndex(page - 1)}
-                        className="w-8 h-8 p-0"
+                        className={`w-8 h-8 p-0 ${
+                          table.getState().pagination.pageIndex + 1 === page
+                            ? "bg-gradient-to-r from-violet-600 to-purple-600"
+                            : "border-violet-200 text-violet-600 hover:bg-violet-50"
+                        }`}
                       >
                         {page}
                       </Button>
@@ -525,12 +549,13 @@ function EnhancedDataTable({
                 size="sm"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
+                className="border-violet-200 text-violet-600 hover:bg-violet-50"
               >
                 Next
               </Button>
             </div>
 
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-violet-700 font-medium">
               Page {table.getState().pagination.pageIndex + 1} of{" "}
               {table.getPageCount()}
             </div>
