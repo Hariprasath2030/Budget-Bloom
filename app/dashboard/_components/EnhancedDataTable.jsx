@@ -197,14 +197,29 @@ function EnhancedDataTable({
       return data;
     }
 
-    const startDate = dayjs(dateRange[0]);
-    const endDate = dayjs(dateRange[1]);
+    const startDate = dayjs(dateRange[0]).startOf('day');
+    const endDate = dayjs(dateRange[1]).endOf('day');
 
     return data.filter((item) => {
-      const itemDate = dayjs(item.createdAt, "DD/MM/YYYY");
+      // Handle different date formats
+      let itemDate;
+      if (item.createdAt) {
+        // Try parsing as DD/MM/YYYY first, then as ISO date
+        itemDate = dayjs(item.createdAt, "DD/MM/YYYY");
+        if (!itemDate.isValid()) {
+          itemDate = dayjs(item.createdAt);
+        }
+      } else {
+        return false;
+      }
+      
+      if (!itemDate.isValid()) {
+        return false;
+      }
+      
       return (
-        itemDate.isAfter(startDate.subtract(1, "day")) &&
-        itemDate.isBefore(endDate.add(1, "day"))
+        itemDate.isSameOrAfter(startDate) &&
+        itemDate.isSameOrBefore(endDate)
       );
     });
   }, [data, dateRange]);

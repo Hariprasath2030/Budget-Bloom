@@ -93,25 +93,20 @@ function ExpensesDashboard() {
   return (
     <>
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white shadow-sm">
+      <div className="sticky top-0 z-50 bg-white shadow-sm backdrop-blur-md bg-opacity-95">
         <DashboardHeader />
       </div>
 
       <div className="flex">
         {/* Desktop toggle */}
-        <div className="hidden lg:flex fixed top-2 left-2 items-center z-30 space-x-3">
+        <div className="hidden lg:flex fixed top-2 left-2 items-center z-40 space-x-3">
           <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100">
             {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          {isSidebarOpen && (
-            <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Budget Bloom
-            </h1>
-          )}
         </div>
 
         {/* Mobile toggle */}
-        <div className="lg:hidden fixed top-1 left-1 z-30">
+        <div className="lg:hidden fixed top-1 left-1 z-40">
           <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-2 bg-white rounded-full shadow-lg">
             {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
