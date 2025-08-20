@@ -4,19 +4,22 @@ import Image from "next/image";
 import img from "../../../public/exlogo.jpg";
 import { Bell } from "lucide-react";
 
-function DashboardHeader() {
+function DashboardHeader({ onLogoClick }) {
   const { user } = useUser();
   return (
     <header className="w-full p-2 sm:p-3 shadow-sm border-b border-gray-200 bg-white backdrop-blur-md bg-opacity-95">
       <div className="flex items-center justify-between">
         {/* Logo & Title */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
+        <div 
+          className="flex items-center space-x-2 sm:space-x-3 cursor-pointer hover:bg-gray-50 rounded-lg p-2 transition-all duration-200 hover:scale-105"
+          onClick={onLogoClick}
+        >
           <Image
             src={img}
             alt="logo"
             width={27}
             height={27}
-            className="rounded-full ring-1 ring-green-400"
+            className="rounded-full ring-1 ring-green-400 hover:ring-2 hover:ring-green-500 transition-all duration-200"
           />
           <h1 className="hidden sm:block text-lg md:text-xl font-bold text-gray-800">
             Budget Bloom

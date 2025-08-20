@@ -118,7 +118,7 @@ export default function ExpensesScreen({ params }) {
     <>
       {/* Header */}
       <div className="sticky top-0 z-50 bg-white shadow-sm backdrop-blur-md bg-opacity-95">
-        <DashboardHeader />
+        <DashboardHeader onLogoClick={() => setSidebarOpen(!isSidebarOpen)} />
       </div>
 
       <div className="flex">

@@ -92,7 +92,7 @@ function SideNav() {
   return (
     <>
       <div className="sticky top-0 z-50 bg-white shadow-sm backdrop-blur-md bg-opacity-95">
-        <DashboardHeader />
+        <DashboardHeader onLogoClick={() => setSidebarOpen(!isSidebarOpen)} />
       </div>
    <div className="flex">
   <div className="hidden lg:flex fixed top-2 left-2 items-center z-40 space-x-3">
