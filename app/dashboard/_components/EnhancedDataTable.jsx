@@ -36,6 +36,12 @@ import { toast } from "sonner";
 import { db } from "../../../utils/dbConfig";
 import { eq } from "drizzle-orm";
 import { Expenses } from "../../../utils/schema";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import isBetween from "dayjs/plugin/isBetween";
+
+dayjs.extend(customParseFormat);
+dayjs.extend(isBetween);
 
 const EditableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue();
@@ -197,39 +203,54 @@ function EnhancedDataTable({
       return data;
     }
 
-    const startDate = dayjs(dateRange[0]).startOf('day');
-    const endDate = dayjs(dateRange[1]).endOf('day');
+    try {
+      const startDate = dayjs(dateRange[0]).startOf('day');
+      const endDate = dayjs(dateRange[1]).endOf('day');
 
-    return data.filter((item) => {
-      if (!item.createdAt) return false;
-      
-      // Handle different date formats more robustly
-      let itemDate;
-      
-      // First try DD/MM/YYYY format
-      if (typeof item.createdAt === 'string' && item.createdAt.includes('/')) {
-        itemDate = dayjs(item.createdAt, "DD/MM/YYYY", true);
-      } else {
-        // Try ISO date format or other standard formats
-        itemDate = dayjs(item.createdAt);
+      if (!startDate.isValid() || !endDate.isValid()) {
+        console.warn('Invalid date range provided');
+        return data;
       }
-      
-      // If still invalid, try other common formats
-      if (!itemDate.isValid()) {
-        const formats = ['YYYY-MM-DD', 'MM/DD/YYYY', 'DD-MM-YYYY', 'YYYY/MM/DD'];
-        for (const format of formats) {
-          itemDate = dayjs(item.createdAt, format, true);
-          if (itemDate.isValid()) break;
+
+      return data.filter((item) => {
+        if (!item.createdAt) return false;
+        
+        try {
+          // Handle different date formats more robustly
+          let itemDate;
+          
+          // First try DD/MM/YYYY format
+          if (typeof item.createdAt === 'string' && item.createdAt.includes('/')) {
+            itemDate = dayjs(item.createdAt, "DD/MM/YYYY", true);
+          } else {
+            // Try ISO date format or other standard formats
+            itemDate = dayjs(item.createdAt);
+          }
+          
+          // If still invalid, try other common formats
+          if (!itemDate.isValid()) {
+            const formats = ['YYYY-MM-DD', 'MM/DD/YYYY', 'DD-MM-YYYY', 'YYYY/MM/DD'];
+            for (const format of formats) {
+              itemDate = dayjs(item.createdAt, format, true);
+              if (itemDate.isValid()) break;
+            }
+          }
+          
+          if (!itemDate.isValid()) {
+            console.warn('Invalid date format:', item.createdAt);
+            return false;
+          }
+          
+          return itemDate.isBetween(startDate, endDate, null, '[]');
+        } catch (error) {
+          console.error('Error parsing date:', item.createdAt, error);
+          return false;
         }
-      }
-      
-      if (!itemDate.isValid()) {
-        console.warn('Invalid date format:', item.createdAt);
-        return false;
-      }
-      
-      return itemDate.isBetween(startDate, endDate, null, '[]');
-    });
+      });
+    } catch (error) {
+      console.error('Error in date filtering:', error);
+      return data;
+    }
   }, [data, dateRange]);
 
   const table = useReactTable({

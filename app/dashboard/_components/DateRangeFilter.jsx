@@ -1,19 +1,30 @@
 "use client";
 import React from "react";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Calendar, Filter, X, Sparkles } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../@/components/ui/input";
 
+dayjs.extend(customParseFormat);
+
 function DateRangeFilter({ dateRange, onDateRangeChange }) {
   const handleStartDateChange = (e) => {
-    const startDate = e.target.value ? dayjs(e.target.value, 'YYYY-MM-DD').startOf('day') : null;
-    onDateRangeChange([startDate, dateRange?.[1] || null]);
+    try {
+      const startDate = e.target.value ? dayjs(e.target.value, 'YYYY-MM-DD').startOf('day') : null;
+      onDateRangeChange([startDate, dateRange?.[1] || null]);
+    } catch (error) {
+      console.error('Error setting start date:', error);
+    }
   };
 
   const handleEndDateChange = (e) => {
-    const endDate = e.target.value ? dayjs(e.target.value, 'YYYY-MM-DD').endOf('day') : null;
-    onDateRangeChange([dateRange?.[0] || null, endDate]);
+    try {
+      const endDate = e.target.value ? dayjs(e.target.value, 'YYYY-MM-DD').endOf('day') : null;
+      onDateRangeChange([dateRange?.[0] || null, endDate]);
+    } catch (error) {
+      console.error('Error setting end date:', error);
+    }
   };
 
   const clearDateRange = () => {
@@ -53,7 +64,7 @@ function DateRangeFilter({ dateRange, onDateRangeChange }) {
           </label>
           <Input
             type="date"
-            value={dateRange?.[0] ? dateRange[0].format('YYYY-MM-DD') : ''}
+            value={dateRange?.[0] && dayjs.isDayjs(dateRange[0]) ? dateRange[0].format('YYYY-MM-DD') : ''}
             onChange={handleStartDateChange}
             className="w-full h-12 border-orange-200 focus:border-orange-400 focus:ring-orange-400 rounded-xl"
           />
@@ -64,7 +75,7 @@ function DateRangeFilter({ dateRange, onDateRangeChange }) {
           </label>
           <Input
             type="date"
-            value={dateRange?.[1] ? dateRange[1].format('YYYY-MM-DD') : ''}
+            value={dateRange?.[1] && dayjs.isDayjs(dateRange[1]) ? dateRange[1].format('YYYY-MM-DD') : ''}
             onChange={handleEndDateChange}
             className="w-full h-12 border-orange-200 focus:border-orange-400 focus:ring-orange-400 rounded-xl"
           />
@@ -76,9 +87,9 @@ function DateRangeFilter({ dateRange, onDateRangeChange }) {
           <div className="flex items-center gap-2 text-sm text-orange-700 font-medium">
             <Filter size={16} className="text-orange-500" />
             <span>
-              Filtering from {dateRange?.[0]?.format('MMM DD, YYYY') || 'beginning'} 
+              Filtering from {dateRange?.[0] && dayjs.isDayjs(dateRange[0]) ? dateRange[0].format('MMM DD, YYYY') : 'beginning'} 
               {' to '} 
-              {dateRange?.[1]?.format('MMM DD, YYYY') || 'end'}
+              {dateRange?.[1] && dayjs.isDayjs(dateRange[1]) ? dateRange[1].format('MMM DD, YYYY') : 'end'}
             </span>
           </div>
         </div>
