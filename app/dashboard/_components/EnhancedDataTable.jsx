@@ -201,26 +201,34 @@ function EnhancedDataTable({
     const endDate = dayjs(dateRange[1]).endOf('day');
 
     return data.filter((item) => {
-      // Handle different date formats
+      if (!item.createdAt) return false;
+      
+      // Handle different date formats more robustly
       let itemDate;
-      if (item.createdAt) {
-        // Try parsing as DD/MM/YYYY first, then as ISO date
-        itemDate = dayjs(item.createdAt, "DD/MM/YYYY");
-        if (!itemDate.isValid()) {
-          itemDate = dayjs(item.createdAt);
-        }
+      
+      // First try DD/MM/YYYY format
+      if (typeof item.createdAt === 'string' && item.createdAt.includes('/')) {
+        itemDate = dayjs(item.createdAt, "DD/MM/YYYY", true);
       } else {
-        return false;
+        // Try ISO date format or other standard formats
+        itemDate = dayjs(item.createdAt);
+      }
+      
+      // If still invalid, try other common formats
+      if (!itemDate.isValid()) {
+        const formats = ['YYYY-MM-DD', 'MM/DD/YYYY', 'DD-MM-YYYY', 'YYYY/MM/DD'];
+        for (const format of formats) {
+          itemDate = dayjs(item.createdAt, format, true);
+          if (itemDate.isValid()) break;
+        }
       }
       
       if (!itemDate.isValid()) {
+        console.warn('Invalid date format:', item.createdAt);
         return false;
       }
       
-      return (
-        itemDate.isSameOrAfter(startDate) &&
-        itemDate.isSameOrBefore(endDate)
-      );
+      return itemDate.isBetween(startDate, endDate, null, '[]');
     });
   }, [data, dateRange]);
 

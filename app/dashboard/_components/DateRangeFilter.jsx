@@ -7,12 +7,12 @@ import { Input } from "../../../@/components/ui/input";
 
 function DateRangeFilter({ dateRange, onDateRangeChange }) {
   const handleStartDateChange = (e) => {
-    const startDate = e.target.value ? dayjs(e.target.value).startOf('day') : null;
+    const startDate = e.target.value ? dayjs(e.target.value, 'YYYY-MM-DD').startOf('day') : null;
     onDateRangeChange([startDate, dateRange?.[1] || null]);
   };
 
   const handleEndDateChange = (e) => {
-    const endDate = e.target.value ? dayjs(e.target.value).endOf('day') : null;
+    const endDate = e.target.value ? dayjs(e.target.value, 'YYYY-MM-DD').endOf('day') : null;
     onDateRangeChange([dateRange?.[0] || null, endDate]);
   };
 

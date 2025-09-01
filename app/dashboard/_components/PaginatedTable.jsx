@@ -50,9 +50,23 @@ function PaginatedTable({ expensesList, refreshData, dateRange }) {
       {
         accessorKey: "createdAt",
         header: "Date",
-        cell: ({ getValue }) => (
-          <div className="font-medium text-gray-700">{getValue()}</div>
-        ),
+        cell: ({ getValue }) => {
+          const value = getValue();
+          if (!value) return <div className="font-medium text-gray-700">-</div>;
+          
+          // Handle different date formats
+          let formattedDate;
+          if (typeof value === 'string' && value.includes('/')) {
+            // Already in DD/MM/YYYY format
+            formattedDate = value;
+          } else {
+            // Parse and format
+            const parsed = dayjs(value);
+            formattedDate = parsed.isValid() ? parsed.format('DD/MM/YYYY') : value;
+          }
+          
+          return <div className="font-medium text-gray-700">{formattedDate}</div>;
+        },
       },
     ],
     []
