@@ -36,7 +36,6 @@ import { toast } from "sonner";
 import { db } from "../../../utils/dbConfig";
 import { eq } from "drizzle-orm";
 import { Expenses } from "../../../utils/schema";
-import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import isBetween from "dayjs/plugin/isBetween";
 
