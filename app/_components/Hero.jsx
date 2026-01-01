@@ -7,10 +7,10 @@ const Hero = () => {
     <section className="bg-gray-50 flex items-center flex-col">
       <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="p-3 text-3xl font-extrabold sm:text-5xl">
+          <div className="p-3 text-md font-extrabold">
             Welcome to Budget Bloom
             <strong className="mt-3 font-extrabold text-blue-700 sm:block">Take Control of Your Finances! </strong>
-          </h1>
+          </div>
 
           <p className="mt-4 font-serif sm:text-xl/relaxed">
             Managing your finances doesn’t have to be complicated. With Budget Bloom, you can effortlessly monitor your income, track your expenses, and gain insights into your spending habits—all in one place.

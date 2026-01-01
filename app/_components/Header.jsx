@@ -11,7 +11,7 @@ function Header() {
 
   return (
     <header className="w-full p-4 sm:p-3 flex justify-between items-center border shadow-md bg-white">
-      {/* Logo & Title */}
+      
       <div className="flex items-center space-x-3">
         <Image
           src={img}
