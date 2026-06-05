@@ -117,3 +117,102 @@ export async function getBudgetSpending(budgetId: string) {
   if (error) throw error;
   return (data || []).reduce((sum: number, e: any) => sum + Number(e.amount), 0);
 }
+
+// ========== AUTO-TRACKING ==========
+
+export async function getPendingAutoTransactions(userId: string) {
+  const { data, error } = await supabase
+    .from('auto_transactions')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('status', 'pending')
+    .order('detected_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+export async function getAllAutoTransactions(userId: string) {
+  const { data, error } = await supabase
+    .from('auto_transactions')
+    .select('*')
+    .eq('user_id', userId)
+    .order('detected_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+export async function createAutoTransaction(tx: {
+  userId: string; amount: number | string; merchantName?: string;
+  category?: string; paymentMethod?: string; sourceApp?: string;
+  rawNotification?: string; transactionDate?: string;
+}) {
+  const insert: any = {
+    user_id: tx.userId,
+    amount: Number(tx.amount),
+  };
+  if (tx.merchantName) insert.merchant_name = tx.merchantName;
+  if (tx.category) insert.category = tx.category;
+  if (tx.paymentMethod) insert.payment_method = tx.paymentMethod;
+  if (tx.sourceApp) insert.source_app = tx.sourceApp;
+  if (tx.rawNotification) insert.raw_notification = tx.rawNotification;
+  if (tx.transactionDate) insert.transaction_date = tx.transactionDate;
+
+  const { data, error } = await supabase.from('auto_transactions').insert(insert).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function confirmAutoTransaction(
+  autoTxId: string, budgetId: string, updates: { category?: string; amount?: number | string }
+) {
+  const update: any = { status: 'confirmed', budget_id: budgetId };
+  if (updates.category) update.category = updates.category;
+  if (updates.amount) update.amount = Number(updates.amount);
+
+  const { data, error } = await supabase.from('auto_transactions').update(update).eq('id', autoTxId).select().single();
+  if (error) throw error;
+
+  // Also create the actual expense
+  const expense: any = {
+    name: data.merchant_name || 'Auto-detected expense',
+    amount: Number(data.amount),
+    budget_id: budgetId,
+  };
+  if (data.transaction_date) expense.expense_date = data.transaction_date;
+
+  const { data: expenseData, error: expenseError } = await supabase.from('expenses').insert(expense).select().single();
+  if (!expenseError && expenseData) {
+    await supabase.from('auto_transactions').update({ expense_id: expenseData.id }).eq('id', autoTxId);
+  }
+
+  return data;
+}
+
+export async function dismissAutoTransaction(autoTxId: string) {
+  const { data, error } = await supabase
+    .from('auto_transactions')
+    .update({ status: 'dismissed' })
+    .eq('id', autoTxId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getMerchantCategories() {
+  const { data, error } = await supabase
+    .from('merchant_categories')
+    .select('*')
+    .order('merchant_pattern', { ascending: true });
+  if (error) throw error;
+  return data;
+}
+
+export async function addMerchantCategory(pattern: string, category: string, icon: string, userId?: string) {
+  const insert: any = { merchant_pattern: pattern.toLowerCase(), category, icon };
+  if (userId) insert.user_id = userId;
+
+  const { data, error } = await supabase.from('merchant_categories').insert(insert).select().single();
+  if (error) throw error;
+  return data;
+}

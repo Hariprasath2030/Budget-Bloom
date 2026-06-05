@@ -2,11 +2,12 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Chrome as Home, Wallet, Receipt, User } from 'lucide-react';
+import { Chrome as Home, Wallet, Receipt, Zap, User } from 'lucide-react';
 
 const tabs = [
   { name: 'Home', href: '/dashboard', icon: Home },
   { name: 'Budgets', href: '/budgets', icon: Wallet },
+  { name: 'Auto', href: '/auto-track', icon: Zap },
   { name: 'Expenses', href: '/expenses', icon: Receipt },
   { name: 'Profile', href: '/profile', icon: User },
 ];
@@ -27,7 +28,7 @@ export default function BottomTabs() {
               <button
                 key={tab.name}
                 onClick={() => router.push(tab.href)}
-                className="relative flex flex-col items-center justify-center py-2 px-4 min-w-[64px] transition-all duration-200"
+                className="relative flex flex-col items-center justify-center py-2 px-3 min-w-[56px] transition-all duration-200"
               >
                 {active && (
                   <motion.div
@@ -42,7 +43,7 @@ export default function BottomTabs() {
                     transition={{ type: 'spring', bounce: 0.4 }}
                   >
                     <tab.icon
-                      size={22}
+                      size={20}
                       className={active ? 'text-indigo-600' : 'text-gray-400'}
                       strokeWidth={active ? 2.5 : 2}
                     />
