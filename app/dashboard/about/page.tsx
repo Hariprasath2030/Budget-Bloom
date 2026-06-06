@@ -1,174 +1,141 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  LayoutGrid,
-  PiggyBank,
-  ReceiptText,
-  ShieldCheck,
-  Menu,
-  X,
-} from "lucide-react";
 import DashboardHeader from "../_components/DashboardHeader";
+import SideNav from "../_components/SideNav";
+import { motion } from "framer-motion";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+const values = [
+  { title: "Simplicity", desc: "We make budgeting clear, clean, and easy to follow.", gradient: "from-blue-500 to-indigo-600", bg: "from-blue-50 to-indigo-50", border: "border-blue-100" },
+  { title: "Empowerment", desc: "Helping you make better financial decisions with confidence.", gradient: "from-emerald-500 to-teal-600", bg: "from-emerald-50 to-teal-50", border: "border-emerald-100" },
+  { title: "Transparency", desc: "No fluff. Just honest, data-driven insights you can trust.", gradient: "from-amber-500 to-orange-600", bg: "from-amber-50 to-orange-50", border: "border-amber-100" },
+  { title: "Well-being", desc: "Smart money management leads to a stress-free mind.", gradient: "from-rose-500 to-pink-600", bg: "from-rose-50 to-pink-50", border: "border-rose-100" },
+];
 
 function AboutPage() {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const path = usePathname();
-
-  const menuList = [
-    { name: "Dashboard", icon: LayoutGrid, href: "/dashboard" },
-    { name: "Budget", icon: PiggyBank, href: "/dashboard/budgets" },
-    { name: "Expenses", icon: ReceiptText, href: "/dashboard/expensesdashboard" },
-    { name: "About us", icon: ShieldCheck, href: "/dashboard/about" },
-  ];
-
-  // Optional: start sidebar open on desktop
-  useEffect(() => {
-    if (window.innerWidth >= 1024) setSidebarOpen(true);
-  }, []);
+  const router = useRouter();
 
   return (
     <>
-      {/* Header */}
-      <div className="sticky top-0 z-50 bg-white shadow-sm backdrop-blur-md bg-opacity-95">
-        <DashboardHeader onLogoClick={() => setSidebarOpen(!isSidebarOpen)} />
+      <div className="sticky top-0 z-40">
+        <DashboardHeader onLogoClick={() => {}} />
       </div>
 
       <div className="flex">
-        {/* Desktop toggle button */}
-        <div className="hidden lg:flex fixed top-2 left-2 items-center z-40 space-x-3">
-          <button
-            onClick={() => setSidebarOpen(!isSidebarOpen)}
-            className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 flex items-center justify-center"
-          >
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+        <div className="hidden lg:block">
+          <SideNav />
         </div>
 
-        {/* Mobile toggle button */}
-        <div className="lg:hidden fixed top-1 left-1 z-40">
-          <button
-            onClick={() => setSidebarOpen(!isSidebarOpen)}
-            className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100"
-          >
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* Sidebar */}
-        <div
-          className={`fixed top-0 left-0 h-screen w-64 bg-white border shadow-sm z-20 transition-transform duration-300
-            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
-        >
-          <ul className="mt-20 px-5 space-y-4 text-lg">
-            {menuList.map((link) => (
-              <li key={link.name}>
-                <Link href={link.href}>
-                  <div
-                    className={`flex items-center space-x-3 p-3 rounded-md transition hover:text-blue-400 hover:bg-blue-100
-                      ${path === link.href ? "text-blue-600 bg-blue-100 font-semibold" : ""}`}
-                  >
-                    <link.icon size={24} />
-                    <span>{link.name}</span>
+        <main className="flex-1 lg:ml-64 min-h-screen bg-gray-50/50 pb-nav">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-8">
+            {/* Page header */}
+            <motion.div
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-3xl p-6 sm:p-8 text-white overflow-hidden relative shadow-xl shadow-amber-500/20"
+            >
+              <div className="absolute top-0 right-0 w-36 h-36 bg-white/10 rounded-full -translate-y-16 translate-x-16" />
+              <div className="relative z-10 flex items-center gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                  onClick={() => router.back()}
+                  className="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center hover:bg-white/30 transition-colors"
+                >
+                  <ArrowLeft size={18} />
+                </motion.button>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <ShieldCheck size={24} />
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+                  <div>
+                    <h2 className="font-black text-2xl sm:text-3xl">About Us</h2>
+                    <p className="text-amber-100 text-sm mt-0.5 font-medium">Our story and values</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
 
-        {/* Main Content */}
-        <section
-          className={`flex-1 transition-all duration-300 ${
-            isSidebarOpen ? "lg:ml-64" : "lg:ml-0"
-          } bg-gradient-to-br from-amber-50/30 via-orange-50/20 to-amber-50/30 min-h-screen py-16 px-4 sm:px-8 lg:px-16`}
-        >
-          {/* Hero Section */}
-          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 mb-16">
-            <div className="w-full lg:w-1/2 relative">
-              <div className="absolute -inset-4 bg-gradient-to-r from-amber-200/30 to-orange-200/30 rounded-2xl blur-xl"></div>
-              <img
-                src="/dashboard.png"
-                alt="About Budget Bloom"
-                className="relative rounded-2xl shadow-2xl w-full h-auto object-cover border border-amber-200"
-              />
+            {/* Hero section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                className="relative rounded-3xl overflow-hidden shadow-xl border border-gray-100"
+              >
+                <img src="/dashboard.png" alt="Dashboard" className="w-full h-auto" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.15 }}
+                className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm"
+              >
+                <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4">
+                  About{" "}
+                  <span className="bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent">
+                    Budget Bloom
+                  </span>
+                </h3>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  Budget Bloom is more than just an expense tracker — it's your personal guide to financial wellness. We make finance simple, accessible, and empowering.
+                </p>
+                <p className="text-gray-600 leading-relaxed mb-6">
+                  Smart visualizations, real-time insights, and budgeting tools tailored to your lifestyle.
+                </p>
+                <Link href="/dashboard">
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-6 py-3 rounded-2xl font-black shadow-lg shadow-amber-500/25 hover:shadow-xl transition-all duration-200"
+                  >
+                    Back to Dashboard
+                  </motion.button>
+                </Link>
+              </motion.div>
             </div>
 
-            <div className="w-full lg:w-1/2 text-center lg:text-left">
-              <h2 className="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-amber-600 via-orange-600 to-amber-600 bg-clip-text text-transparent mb-6">
-                About Budget Bloom
-              </h2>
-              <p className="text-gray-700 text-lg leading-relaxed mb-4">
-                Budget Bloom is more than just an expense tracker—it's your personal guide to financial wellness. We make finance simple, accessible, and empowering.
-              </p>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                Smart visualizations, real-time insights, and budgeting tools tailored to your lifestyle.
-              </p>
-
-              <div className="mt-10">
-                <Link
-                  href="/dashboard"
-                  className="inline-block rounded-2xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 px-8 py-4 text-white font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                >
-                  Back to Dashboard
-                </Link>
+            {/* Values */}
+            <div>
+              <motion.h3
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-2xl sm:text-3xl font-black text-gray-900 mb-6 text-center"
+              >
+                Our Core Values
+              </motion.h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {values.map((val, i) => (
+                  <motion.div
+                    key={val.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.25 + i * 0.08 }}
+                    whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0,0,0,0.08)" }}
+                    className={`bg-gradient-to-br ${val.bg} border ${val.border} rounded-3xl p-6 transition-shadow duration-300`}
+                  >
+                    <div className={`w-12 h-12 bg-gradient-to-br ${val.gradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg`}>
+                      <div className="w-5 h-5 bg-white/80 rounded-lg" />
+                    </div>
+                    <h4 className={`text-lg font-black bg-gradient-to-r ${val.gradient} bg-clip-text text-transparent mb-2`}>
+                      {val.title}
+                    </h4>
+                    <p className="text-gray-600 text-sm leading-relaxed">{val.desc}</p>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </div>
+        </main>
+      </div>
 
-          {/* Values Section */}
-          <div className="max-w-6xl mx-auto text-center">
-            <h3 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-12">
-              Our Core Values
-            </h3>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[
-                {
-                  title: "Simplicity",
-                  desc: "We make budgeting clear, clean, and easy to follow for everyone.",
-                  color: "from-violet-500 to-purple-500",
-                  bg: "from-violet-50 to-purple-50",
-                },
-                {
-                  title: "Empowerment",
-                  desc: "Helping you make better financial decisions with confidence.",
-                  color: "from-emerald-500 to-teal-500",
-                  bg: "from-emerald-50 to-teal-50",
-                },
-                {
-                  title: "Transparency",
-                  desc: "No fluff. Just honest, data-driven insights you can trust.",
-                  color: "from-amber-500 to-orange-500",
-                  bg: "from-amber-50 to-orange-50",
-                },
-                {
-                  title: "Well-being",
-                  desc: "Because smart money leads to a stress-free mind and life.",
-                  color: "from-rose-500 to-pink-500",
-                  bg: "from-rose-50 to-pink-50",
-                },
-              ].map((val) => (
-                <div
-                  key={val.title}
-                  className={`p-6 rounded-2xl bg-gradient-to-br ${val.bg} border border-gray-200 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 hover:scale-105`}
-                >
-                  <div
-                    className={`w-12 h-12 bg-gradient-to-br ${val.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}
-                  >
-                    <div className="w-6 h-6 bg-white rounded-lg"></div>
-                  </div>
-                  <h4
-                    className={`text-xl font-bold bg-gradient-to-r ${val.color} bg-clip-text text-transparent mb-3`}
-                  >
-                    {val.title}
-                  </h4>
-                  <p className="text-gray-600 leading-relaxed">{val.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+      <div className="lg:hidden">
+        <SideNav />
       </div>
     </>
   );

@@ -6,21 +6,13 @@ import { db } from "../../../../../utils/dbConfig";
 import { Expenses } from "../../../../../utils/schema";
 import { toast } from "sonner";
 import moment from "moment";
-import {
-  Loader,
-  Plus,
-  Calendar,
-  DollarSign,
-  FileText,
-  Sparkles,
-} from "lucide-react";
+import { Loader, Plus, Calendar, DollarSign, FileText } from "lucide-react";
+import { motion } from "framer-motion";
 
 function AddExpense({ budgetId, user, refreshData }) {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
-  const [selectedDate, setSelectedDate] = useState(
-    moment().format("YYYY-MM-DD")
-  );
+  const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM-DD"));
   const [loading, setLoading] = useState(false);
 
   const addNewExpenses = async () => {
@@ -30,16 +22,13 @@ function AddExpense({ budgetId, user, refreshData }) {
       setLoading(false);
       return;
     }
-
     try {
-      const parsedBudgetId = Number(budgetId);
-
       const result = await db
         .insert(Expenses)
         .values({
-          name: name,
+          name,
           amount: Number(amount),
-          budgetId: parsedBudgetId,
+          budgetId: Number(budgetId),
           createdAt: moment(selectedDate).format("DD/MM/YYYY"),
         })
         .returning({ insertedId: Expenses.id });
@@ -49,96 +38,110 @@ function AddExpense({ budgetId, user, refreshData }) {
       setSelectedDate(moment().format("YYYY-MM-DD"));
 
       if (result.length > 0) {
-        toast.success("New Expense Added Successfully!");
+        toast.success("Expense added!");
         refreshData();
       }
     } catch (error) {
       console.error("Error adding expense:", error);
-      toast.error("Failed to add expense. Try again!");
+      toast.error("Failed to add expense.");
     } finally {
       setLoading(false);
     }
   };
 
+  const fields = [
+    {
+      id: "name",
+      label: "Expense Name",
+      icon: FileText,
+      iconColor: "text-emerald-500",
+      placeholder: "e.g. Grocery shopping",
+      type: "text",
+      value: name,
+      onChange: (e) => setName(e.target.value),
+    },
+    {
+      id: "amount",
+      label: "Amount",
+      icon: DollarSign,
+      iconColor: "text-emerald-500",
+      placeholder: "0.00",
+      type: "number",
+      value: amount,
+      onChange: (e) => setAmount(e.target.value),
+    },
+    {
+      id: "date",
+      label: "Date",
+      icon: Calendar,
+      iconColor: "text-emerald-500",
+      placeholder: "",
+      type: "date",
+      value: selectedDate,
+      onChange: (e) => setSelectedDate(e.target.value),
+    },
+  ];
+
   return (
-    <div className="relative border border-emerald-200 p-6 rounded-2xl bg-gradient-to-br from-white to-emerald-50/30 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden">
-      <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-100/40 rounded-full -translate-y-10 translate-x-10"></div>
-      <div className="absolute bottom-0 left-0 w-16 h-16 bg-teal-100/30 rounded-full translate-y-8 -translate-x-8"></div>
-
-      <div className="flex items-center gap-3 mb-6 relative z-10">
-        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-2 rounded-xl">
-          <Plus className="text-white" size={20} />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white border border-gray-100 rounded-3xl p-6 shadow-lg"
+    >
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-md">
+          <Plus size={20} className="text-white" />
         </div>
-        <h2 className="font-bold text-xl text-gray-800">Add Expense</h2>
-        <Sparkles className="text-emerald-400 animate-pulse" size={16} />
-      </div>
-
-      <div className="space-y-5 relative z-10">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <FileText className="text-emerald-600" size={16} />
-            <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">
-              Expense Name
-            </h2>
-          </div>
-          <Input
-            placeholder="Enter Expense Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="h-12 border-emerald-200 focus:border-emerald-400 focus:ring-emerald-400 rounded-xl"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <DollarSign className="text-emerald-600" size={16} />
-            <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">
-              Expense Amount
-            </h2>
-          </div>
-          <Input
-            type="number"
-            placeholder="Enter Expense Amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="h-12 border-emerald-200 focus:border-emerald-400 focus:ring-emerald-400 rounded-xl"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Calendar className="text-emerald-600" size={16} />
-            <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">
-              Expense Date
-            </h2>
-          </div>
-          <Input
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-            className="h-12 border-emerald-200 focus:border-emerald-400 focus:ring-emerald-400 rounded-xl"
-          />
+        <div>
+          <h2 className="font-black text-gray-900 text-lg leading-tight">Add Expense</h2>
+          <p className="text-xs text-gray-400 font-medium">Track a new spending item</p>
         </div>
       </div>
 
-      <Button
-        disabled={!(name && amount) || loading}
-        onClick={addNewExpenses}
-        className="mt-6 w-full h-12 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative z-10"
-      >
-        {loading ? (
-          <div className="flex items-center gap-2">
-            <Loader className="animate-spin" size={18} />
-            <span>Adding...</span>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <Plus size={18} />
-            <span>Add New Expense</span>
-          </div>
-        )}
-      </Button>
-    </div>
+      <div className="space-y-4">
+        {fields.map((field, i) => (
+          <motion.div
+            key={field.id}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.05 }}
+            className="space-y-1.5"
+          >
+            <label className="flex items-center gap-2 text-sm font-bold text-gray-700">
+              <field.icon size={14} className={field.iconColor} />
+              {field.label}
+            </label>
+            <Input
+              type={field.type}
+              placeholder={field.placeholder}
+              value={field.value}
+              onChange={field.onChange}
+              className="h-12 rounded-2xl border-gray-200 bg-gray-50 focus:bg-white focus:border-emerald-400 focus:ring-emerald-400/20 text-sm font-medium transition-all duration-200"
+            />
+          </motion.div>
+        ))}
+      </div>
+
+      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} className="mt-6">
+        <Button
+          disabled={!(name && amount) || loading}
+          onClick={addNewExpenses}
+          className="w-full h-13 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black rounded-2xl shadow-lg shadow-emerald-500/25 transition-all duration-200 text-base"
+        >
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <Loader size={18} className="animate-spin" />
+              Adding...
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <Plus size={18} />
+              Add Expense
+            </span>
+          )}
+        </Button>
+      </motion.div>
+    </motion.div>
   );
 }
 

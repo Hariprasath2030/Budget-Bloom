@@ -1,90 +1,91 @@
 import React from 'react'
-import { BarChart, Bar, Legend, Tooltip, XAxis, YAxis, ResponsiveContainer, Cell } from 'recharts'
+import { BarChart, Bar, Legend, Tooltip, XAxis, YAxis, ResponsiveContainer } from 'recharts'
+import { motion } from 'framer-motion'
+import { BarChart3 } from 'lucide-react'
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-2xl shadow-black/10">
+        <p className="text-sm font-black text-gray-900 mb-2">{label}</p>
+        {payload.map((entry, i) => (
+          <div key={i} className="flex items-center gap-2 text-xs font-semibold">
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.fill }} />
+            <span className="text-gray-600">{entry.name}:</span>
+            <span className="text-gray-900">${Number(entry.value).toLocaleString()}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 function BarChartDashboard({ budgetList }) {
-  const colors = [
-    '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444',
-    '#8B5A2B', '#6366F1', '#84CC16', '#F97316'
-  ];
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="w-1 h-8 bg-gradient-to-b from-violet-500 to-purple-500 rounded-full"></div>
-        <h2 className='font-bold text-2xl lg:text-3xl text-gray-800'>Financial Activity</h2>
-      </div>
-      
-      <div className='bg-white border border-gray-200 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300'>
-        <div className="mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h3 className="text-lg font-semibold text-gray-700">Budget vs Spending Analysis</h3>
-          <div className="flex gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gradient-to-r from-violet-500 to-purple-500 rounded-full"></div>
-              <span className="text-gray-600">Total Spend</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gradient-to-r from-violet-200 to-purple-200 rounded-full"></div>
-              <span className="text-gray-600">Budget Amount</span>
-            </div>
-          </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="bg-white border border-gray-100 rounded-3xl p-5 sm:p-6 shadow-sm"
+    >
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-md">
+          <BarChart3 size={20} className="text-white" />
         </div>
-        
-        <ResponsiveContainer width={'100%'} height={350} >
-          <BarChart
-            data={budgetList}
-            margin={{
-              top: 20,
-              right: 30,
-              left: 20,
-              bottom: 10
-            }}
-          >
-            <XAxis 
-              dataKey="name" 
-              tick={{ fill: '#6B7280', fontSize: 12 }}
-              axisLine={{ stroke: '#E5E7EB' }}
-            />
-            <YAxis 
-              tick={{ fill: '#6B7280', fontSize: 12 }}
-              axisLine={{ stroke: '#E5E7EB' }}
-            />
-            <Tooltip 
-              contentStyle={{
-                backgroundColor: 'white',
-                border: '1px solid #E5E7EB',
-                borderRadius: '12px',
-                boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-              }}
-            />
-            <Legend />
-            <Bar 
-              dataKey='totalSpend' 
-              stackId="a" 
-              fill="url(#spendGradient)"
-              radius={[0, 0, 4, 4]}
-            />
-            <Bar 
-              dataKey='amount' 
-              stackId="a" 
-              fill="url(#budgetGradient)"
-              radius={[4, 4, 0, 0]}
-            />
-            <defs>
-              <linearGradient id="spendGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#8B5CF6" />
-                <stop offset="100%" stopColor="#EC4899" />
-              </linearGradient>
-              <linearGradient id="budgetGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#C4B5FD" />
-                <stop offset="100%" stopColor="#F3E8FF" />
-              </linearGradient>
-            </defs>
-
-          </BarChart>
-        </ResponsiveContainer>
+        <div>
+          <h2 className="font-black text-gray-900 text-lg leading-tight">Budget vs Spending</h2>
+          <p className="text-xs text-gray-400 font-medium">Monthly overview</p>
+        </div>
       </div>
-    </div>
-  )
+
+      {/* Legend */}
+      <div className="flex gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-blue-500" />
+          <span className="text-xs text-gray-500 font-semibold">Spent</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-blue-200" />
+          <span className="text-xs text-gray-500 font-semibold">Budget</span>
+        </div>
+      </div>
+
+      <ResponsiveContainer width="100%" height={260}>
+        <BarChart
+          data={budgetList}
+          margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+          barCategoryGap="35%"
+        >
+          <defs>
+            <linearGradient id="spendGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#6366f1" />
+            </linearGradient>
+            <linearGradient id="budgetGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#bfdbfe" />
+              <stop offset="100%" stopColor="#e0e7ff" />
+            </linearGradient>
+          </defs>
+          <XAxis
+            dataKey="name"
+            tick={{ fill: "#9ca3af", fontSize: 11, fontWeight: 600 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            tick={{ fill: "#9ca3af", fontSize: 11, fontWeight: 600 }}
+            axisLine={false}
+            tickLine={false}
+            tickFormatter={(v) => `$${v}`}
+          />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(99,102,241,0.05)", radius: 8 }} />
+          <Bar dataKey="totalSpend" stackId="a" fill="url(#spendGrad)" radius={[0, 0, 4, 4]} maxBarSize={40} />
+          <Bar dataKey="amount" stackId="a" fill="url(#budgetGrad)" radius={[4, 4, 0, 0]} maxBarSize={40} />
+        </BarChart>
+      </ResponsiveContainer>
+    </motion.div>
+  );
 }
 
-export default BarChartDashboard
+export default BarChartDashboard;

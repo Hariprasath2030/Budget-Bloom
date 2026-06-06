@@ -1,124 +1,112 @@
 import React from "react";
 import Link from "next/link";
-import { TrendingUp, TrendingDown, Target } from "lucide-react";
+import { TrendingUp, TrendingDown, Target, Zap } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function BudgetItem({ budget }) {
-  const calculateProgressPerc = () => {
-    const perc = (budget.totalSpend / budget.amount) * 100;
-    return Math.min(perc, 100).toFixed(2);
-  };
+  const progressPerc = Math.min(((budget.totalSpend || 0) / (budget.amount || 1)) * 100, 100);
+  const remaining = (budget.amount || 0) - (budget.totalSpend || 0);
+  const isOverBudget = remaining < 0;
+  const isWarning = progressPerc > 70;
 
-  const remaining = budget.amount - (budget.totalSpend || 0);
-  const progressPerc = calculateProgressPerc();
+  const barColor = isOverBudget
+    ? "from-red-500 to-red-600"
+    : isWarning
+    ? "from-amber-400 to-orange-500"
+    : "from-emerald-400 to-teal-500";
+
+  const cardAccent = isOverBudget
+    ? "border-red-100 bg-gradient-to-br from-red-50/50 to-pink-50/30"
+    : isWarning
+    ? "border-amber-100 bg-gradient-to-br from-amber-50/50 to-orange-50/30"
+    : "border-gray-100 bg-white";
 
   return (
     <Link href={"/dashboard/expenses/" + budget?.id}>
-      <div
-        className="relative overflow-hidden p-4 sm:p-6 border border-gray-200 rounded-2xl 
-             hover:shadow-2xl cursor-pointer h-auto bg-gradient-to-br 
-             from-white via-violet-50/20 to-purple-50/30 
-             hover:from-violet-50 hover:to-purple-100 transition-all 
-             duration-500 transform hover:-translate-y-2 hover:scale-105 mb-5 group
-             sm:mb-5"
+      <motion.div
+        whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(0,0,0,0.08)" }}
+        whileTap={{ scale: 0.98 }}
+        className={`relative rounded-3xl border p-5 cursor-pointer overflow-hidden transition-shadow duration-300 ${cardAccent}`}
       >
-        {/* background decorative circles */}
-        <div className="absolute top-0 right-0 w-16 h-16 sm:w-24 sm:h-24 bg-violet-100/30 rounded-full -translate-y-12 translate-x-12 group-hover:scale-150 transition-transform duration-500"></div>
-        <div className="absolute bottom-0 left-0 w-12 h-12 sm:w-20 sm:h-20 bg-purple-100/20 rounded-full translate-y-10 -translate-x-10 group-hover:scale-125 transition-transform duration-500"></div>
+        {/* Decorative bg blob */}
+        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-100/30 to-indigo-100/20 rounded-full -translate-y-10 translate-x-10 pointer-events-none" />
 
-        {/* header row */}
-        <div className="flex gap-2 sm:gap-3 items-center justify-between relative z-10">
-          <div className="flex gap-2 sm:gap-3 items-center">
-            <div className="relative">
-              <h2 className="text-2xl sm:text-3xl p-2 sm:p-3 px-3 sm:px-4 bg-gradient-to-br from-violet-100 to-purple-100 rounded-2xl border border-violet-200 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                {budget?.icon}
-              </h2>
-              <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-emerald-400 rounded-full animate-pulse"></div>
-            </div>
+        {/* Header row */}
+        <div className="flex items-start justify-between mb-5 relative z-10">
+          <div className="flex items-center gap-3">
+            <motion.div
+              whileHover={{ scale: 1.15, rotate: 5 }}
+              className="text-3xl w-14 h-14 bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-2xl flex items-center justify-center shadow-sm"
+            >
+              {budget?.icon}
+            </motion.div>
             <div>
-              <h2 className="font-bold text-gray-800 text-sm sm:text-lg">
-                {budget.name}
-              </h2>
-              <div className="flex items-center gap-1 sm:gap-2 mt-1">
-                <Target className="text-violet-500" size={12} sm={14} />
-                <h2 className="text-xs sm:text-sm text-gray-600 font-medium">
-                  {budget.totalItem} Item{budget.totalItem !== 1 ? "s" : ""}
-                </h2>
+              <h3 className="font-black text-gray-900 text-base leading-tight">{budget.name}</h3>
+              <div className="flex items-center gap-1.5 mt-1">
+                <Target size={12} className="text-gray-400" />
+                <span className="text-xs text-gray-500 font-medium">
+                  {budget.totalItem || 0} item{budget.totalItem !== 1 ? "s" : ""}
+                </span>
               </div>
             </div>
           </div>
 
           <div className="text-right">
-            <h2 className="font-bold text-violet-600 text-lg sm:text-xl">
-               ₹{budget.amount}
-            </h2>
-            <div className="flex items-center gap-1 mt-1">
-              {remaining >= 0 ? (
-                <TrendingUp className="text-emerald-500" size={12} sm={14} />
+            <p className="text-xl font-black text-blue-600">₹{Number(budget.amount).toLocaleString()}</p>
+            <div className="flex items-center justify-end gap-1 mt-1">
+              {!isOverBudget ? (
+                <TrendingUp size={12} className="text-emerald-500" />
               ) : (
-                <TrendingDown className="text-red-500" size={12} sm={14} />
+                <TrendingDown size={12} className="text-red-500" />
               )}
-              <span
-                className={`text-xs sm:text-sm font-medium ${
-                  remaining >= 0 ? "text-emerald-600" : "text-red-600"
-                }`}
-              >
-                {remaining >= 0 ? "On track" : "Over budget"}
+              <span className={`text-xs font-bold ${isOverBudget ? "text-red-500" : "text-emerald-600"}`}>
+                {isOverBudget ? "Over budget" : "On track"}
               </span>
             </div>
           </div>
         </div>
 
-        {/* progress + stats */}
-        <div className="mt-4 sm:mt-6 relative z-10">
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-              <h2 className="text-xs sm:text-sm text-gray-600 font-semibold">
-                 ₹{budget.totalSpend ? budget.totalSpend : 0} Spent
-              </h2>
+        {/* Progress section */}
+        <div className="relative z-10">
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-red-400" />
+              <span className="text-xs font-semibold text-gray-600">₹{(budget.totalSpend || 0).toLocaleString()} spent</span>
             </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-              <h2 className="text-xs sm:text-sm text-gray-600 font-semibold">
-                 ₹{remaining.toFixed(2)} Remaining
-              </h2>
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="text-xs font-semibold text-gray-600">₹{Math.abs(remaining).toLocaleString()} {isOverBudget ? "over" : "left"}</span>
             </div>
           </div>
 
-          <div className="relative">
-            <div className="w-full bg-gray-200 h-3 sm:h-4 rounded-full overflow-hidden shadow-inner">
-              <div
-                className={`h-3 sm:h-4 rounded-full transition-all duration-700 ease-out relative ${
-                  progressPerc > 90
-                    ? "bg-gradient-to-r from-red-500 to-red-600"
-                    : progressPerc > 70
-                    ? "bg-gradient-to-r from-amber-500 to-orange-600"
-                    : "bg-gradient-to-r from-emerald-500 to-teal-600"
-                }`}
-                style={{ width: `${progressPerc}%` }}
-              >
-                <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-              </div>
-            </div>
-            <div className="flex justify-between items-center mt-1 sm:mt-2">
-              <span className="text-xs sm:text-sm font-bold text-gray-700">
-                {progressPerc}% used
-              </span>
-              <span
-                className={`text-xs sm:text-sm font-bold ${
-                  progressPerc > 90
-                    ? "text-red-600"
-                    : progressPerc > 70
-                    ? "text-amber-600"
-                    : "text-emerald-600"
-                }`}
-              >
-                {progressPerc > 100 ? "Over Budget!" : "Within Budget"}
-              </span>
-            </div>
+          {/* Progress bar */}
+          <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPerc}%` }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+              className={`h-full rounded-full bg-gradient-to-r ${barColor} relative`}
+            >
+              <div className="absolute inset-0 bg-white/20 rounded-full" />
+            </motion.div>
+          </div>
+
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-xs font-bold text-gray-500">{progressPerc.toFixed(0)}% used</span>
+            <span className={`text-xs font-bold flex items-center gap-1 ${
+              isOverBudget ? "text-red-500" : isWarning ? "text-amber-600" : "text-emerald-600"
+            }`}>
+              {isOverBudget ? (
+                <>Over Budget</>
+              ) : isWarning ? (
+                <><Zap size={11} />Almost there</>
+              ) : (
+                <>Within Budget</>
+              )}
+            </span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 }

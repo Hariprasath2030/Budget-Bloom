@@ -4,123 +4,128 @@ import {
   Wallet,
   TrendingUp,
   TrendingDown,
-  Sparkles,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
+const cardData = (totalBudget, totalSpend, budgetCount) => [
+  {
+    label: "Total Budget",
+    value: `$${totalBudget.toLocaleString()}`,
+    icon: PiggyBank,
+    trend: "+12%",
+    trendUp: true,
+    trendLabel: "vs last month",
+    gradient: "from-blue-500 to-indigo-600",
+    bg: "from-blue-50 to-indigo-50",
+    border: "border-blue-100",
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-600",
+    valueColor: "text-blue-900",
+  },
+  {
+    label: "Total Spend",
+    value: `$${totalSpend.toLocaleString()}`,
+    icon: ReceiptText,
+    trend: "-5%",
+    trendUp: false,
+    trendLabel: "vs last month",
+    gradient: "from-rose-500 to-pink-600",
+    bg: "from-rose-50 to-pink-50",
+    border: "border-rose-100",
+    iconBg: "bg-rose-100",
+    iconColor: "text-rose-600",
+    valueColor: "text-rose-900",
+  },
+  {
+    label: "Active Budgets",
+    value: budgetCount,
+    icon: Wallet,
+    trend: totalBudget > 0 ? `${(((totalBudget - totalSpend) / totalBudget) * 100).toFixed(0)}% left` : "No budget",
+    trendUp: totalBudget > totalSpend,
+    trendLabel: "budget remaining",
+    gradient: "from-emerald-500 to-teal-600",
+    bg: "from-emerald-50 to-teal-50",
+    border: "border-emerald-100",
+    iconBg: "bg-emerald-100",
+    iconColor: "text-emerald-600",
+    valueColor: "text-emerald-900",
+  },
+];
 
 function CardInfo({ budgetList }) {
   const [totalBudget, setTotalBudget] = useState(0);
   const [totalSpend, setTotalSpend] = useState(0);
 
   useEffect(() => {
-    CalculateCardInfo();
+    let budget = 0;
+    let spend = 0;
+    budgetList.forEach((el) => {
+      budget += Number(el.amount);
+      spend += el.totalSpend;
+    });
+    setTotalBudget(budget);
+    setTotalSpend(spend);
   }, [budgetList]);
 
-  const CalculateCardInfo = () => {
-    let totalBudget_ = 0;
-    let totalSpend_ = 0;
+  if (budgetList?.length === 0) {
+    return (
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {[1, 2, 3].map((_, i) => (
+          <div key={i} className="skeleton h-36 rounded-3xl" />
+        ))}
+      </div>
+    );
+  }
 
-    budgetList.forEach((element) => {
-      totalBudget_ += Number(element.amount);
-      totalSpend_ += element.totalSpend;
-    });
-
-    setTotalBudget(totalBudget_);
-    setTotalSpend(totalSpend_);
-  };
+  const cards = cardData(totalBudget, totalSpend, budgetList?.length);
 
   return (
-    <div>
-      {budgetList?.length > 0 ? (
-        <div className="mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="relative p-6 border border-rose-200 rounded-2xl flex items-center justify-between bg-gradient-to-br from-rose-50 via-pink-50 to-rose-100 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-rose-200/30 rounded-full -translate-y-10 translate-x-10"></div>
-            <div className="absolute bottom-0 left-0 w-16 h-16 bg-rose-300/20 rounded-full translate-y-8 -translate-x-8"></div>
-            <div>
-              <h2 className="text-sm text-rose-700 font-bold uppercase tracking-wide">
-                Total Budget
-              </h2>
-              <h2 className="font-bold text-3xl text-rose-900 mt-1">
-                ${totalBudget}
-              </h2>
-              <div className="flex items-center mt-2">
-                <TrendingUp className="text-emerald-500 mr-1" size={16} />
-                <span className="text-sm text-emerald-600 font-medium">
-                  +12% from last month
-                </span>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-rose-400 to-pink-500 rounded-2xl blur-sm"></div>
-              <PiggyBank className="relative bg-gradient-to-br from-rose-500 to-pink-600 p-4 h-16 w-16 rounded-2xl text-white shadow-2xl" />
-            </div>
-          </div>
+    <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {cards.map((card, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.1, duration: 0.4, type: "spring", stiffness: 120 }}
+          whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(0,0,0,0.09)" }}
+          className={`relative bg-gradient-to-br ${card.bg} border ${card.border} rounded-3xl p-5 overflow-hidden cursor-default transition-shadow duration-300`}
+        >
+          <div className={`absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br ${card.gradient} opacity-10 rounded-full`} />
+          <div className={`absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br ${card.gradient} opacity-[0.07] rounded-full`} />
 
-          <div className="relative p-6 border border-orange-200 rounded-2xl flex items-center justify-between bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 bg-orange-200/30 rounded-full -translate-y-12 translate-x-12"></div>
-            <div className="absolute bottom-0 left-0 w-20 h-20 bg-amber-300/20 rounded-full translate-y-10 -translate-x-10"></div>
-            <div>
-              <h2 className="text-sm text-orange-700 font-bold uppercase tracking-wide">
-                Total Spend
-              </h2>
-              <h2 className="font-bold text-3xl text-orange-900 mt-1">
-                ${totalSpend}
-              </h2>
-              <div className="flex items-center mt-2">
-                <TrendingDown className="text-red-500 mr-1" size={16} />
-                <span className="text-sm text-red-600 font-medium">
-                  -5% from last month
-                </span>
+          <div className="relative z-10">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">{card.label}</p>
+                <motion.p
+                  key={card.value}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`text-3xl font-black ${card.valueColor}`}
+                >
+                  {card.value}
+                </motion.p>
+              </div>
+              <div className={`w-12 h-12 ${card.iconBg} rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0`}>
+                <card.icon size={22} className={card.iconColor} />
               </div>
             </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-amber-500 rounded-2xl blur-sm"></div>
-              <ReceiptText className="relative bg-gradient-to-br from-orange-500 to-amber-600 p-4 h-16 w-16 rounded-2xl text-white shadow-2xl" />
-            </div>
-          </div>
 
-          <div className="relative p-6 border border-emerald-200 rounded-2xl flex items-center justify-between bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 overflow-hidden md:col-span-2 lg:col-span-1">
-            <div className="absolute top-0 right-0 w-28 h-28 bg-emerald-200/30 rounded-full -translate-y-14 translate-x-14"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-teal-300/20 rounded-full translate-y-12 -translate-x-12"></div>
-            <Sparkles className="absolute top-4 right-4 text-emerald-300 animate-pulse" size={20} />
-            <div>
-              <h2 className="text-sm text-emerald-700 font-bold uppercase tracking-wide">
-                Active Budgets
-              </h2>
-              <h2 className="font-bold text-3xl text-emerald-900 mt-1">
-                {budgetList?.length}
-              </h2>
-              <div className="flex items-center mt-2">
-                <span className="text-sm text-emerald-600 font-medium">
-                  {totalBudget > 0
-                    ? `${(
-                        ((totalBudget - totalSpend) / totalBudget) *
-                        100
-                      ).toFixed(1)}% remaining`
-                    : "No budget set"}
-                </span>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl blur-sm"></div>
-              <Wallet className="relative bg-gradient-to-br from-emerald-500 to-teal-600 p-4 h-16 w-16 rounded-2xl text-white shadow-2xl" />
+            <div className="flex items-center gap-1.5">
+              {card.trendUp ? (
+                <TrendingUp size={14} className="text-emerald-500" />
+              ) : (
+                <TrendingDown size={14} className="text-rose-500" />
+              )}
+              <span className={`text-sm font-bold ${card.trendUp ? "text-emerald-600" : "text-rose-600"}`}>
+                {card.trend}
+              </span>
+              <span className="text-xs text-gray-400 font-medium">{card.trendLabel}</span>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((_, index) => (
-            <div
-              key={index}
-              className="h-[160px] w-full bg-gradient-to-br from-gray-100 via-gray-150 to-gray-200 animate-pulse rounded-2xl flex items-center justify-center shadow-lg"
-            >
-              <p className="text-center text-gray-500 font-medium text-lg">
-                Loading...
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+        </motion.div>
+      ))}
     </div>
   );
 }

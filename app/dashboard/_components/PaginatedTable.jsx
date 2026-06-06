@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { Expenses } from "../../../utils/schema";
 import EnhancedDataTable from "./EnhancedDataTable";
+import dayjs from "dayjs";
 
 function PaginatedTable({ expensesList, refreshData, dateRange }) {
   const deleteExpense = async (expense) => {

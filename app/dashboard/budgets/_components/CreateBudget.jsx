@@ -17,24 +17,24 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { db } from "../../../../utils/dbConfig";
 import { Budgets } from "../../../../utils/schema";
-import { Sparkles, Target } from "lucide-react";
-import { Plus } from "lucide-react";
+import { Plus, Wallet, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function CreateBudget({ refreshData, parentOptions }) {
-  const [emojiIcon, setEmojiIcon] = useState("😊");
+  const [emojiIcon, setEmojiIcon] = useState("💰");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [parentId, setParentId] = useState("");
+  const [open, setOpen] = useState(false);
 
   const { user } = useUser();
 
   const onCreateBudget = async () => {
     if (!name || !amount) {
-      toast.error("Please enter budget name and amount");
+      toast.error("Please fill in all fields");
       return;
     }
-
     try {
       const result = await db
         .insert(Budgets)
@@ -49,10 +49,12 @@ export default function CreateBudget({ refreshData, parentOptions }) {
 
       if (result) {
         refreshData();
-        toast.success("New Budget Created Successfully");
+        toast.success("Budget created!");
         setName("");
         setAmount("");
         setParentId("");
+        setEmojiIcon("💰");
+        setOpen(false);
       }
     } catch (error) {
       console.error("Error creating budget:", error);
@@ -61,137 +63,144 @@ export default function CreateBudget({ refreshData, parentOptions }) {
   };
 
   return (
-    <div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <div
-            className="relative bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-50 p-6 lg:p-8 w-full
-           rounded-2xl items-center flex flex-col 
-           border-2 border-dashed border-violet-300 cursor-pointer
-            hover:bg-gradient-to-br hover:from-violet-100 hover:to-purple-100 hover:border-violet-500 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 h-[180px] justify-center overflow-hidden group"
-          >
-            <div className="absolute top-0 right-0 w-20 h-20 bg-violet-200/30 rounded-full -translate-y-10 translate-x-10 group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute bottom-0 left-0 w-16 h-16 bg-purple-300/20 rounded-full translate-y-8 -translate-x-8 group-hover:scale-125 transition-transform duration-500"></div>
-
-            <div className="relative bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 text-white rounded-2xl w-14 h-14 flex items-center justify-center mb-4 shadow-2xl group-hover:rotate-12 transition-all duration-300">
-              <h2 className="text-3xl font-bold">+</h2>
-              <Sparkles
-                className="absolute -top-1 -right-1 text-yellow-300 animate-pulse"
-                size={16}
-              />
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <motion.div
+          whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(99,102,241,0.15)" }}
+          whileTap={{ scale: 0.97 }}
+          className="relative bg-gradient-to-br from-blue-50 via-indigo-50/50 to-blue-50 border-2 border-dashed border-blue-200 rounded-3xl flex flex-col items-center justify-center cursor-pointer h-[180px] overflow-hidden group transition-all duration-300 hover:border-blue-400"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="relative z-10 flex flex-col items-center gap-3">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/25 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <Plus size={26} className="text-white" strokeWidth={2.5} />
             </div>
-
-            <h2 className="text-gray-800 font-bold text-lg text-center relative z-10">
-              Create New Budget
-            </h2>
-            <p className="text-gray-600 text-sm mt-2 text-center relative z-10 font-medium">
-              Start tracking your expenses
-            </p>
+            <div className="text-center">
+              <p className="font-black text-gray-800 text-base">New Budget</p>
+              <p className="text-xs text-gray-500 font-medium mt-0.5">Tap to create</p>
+            </div>
           </div>
-        </DialogTrigger>
+        </motion.div>
+      </DialogTrigger>
 
-        <DialogContent className="sm:max-w-md lg:max-w-lg w-full bg-gradient-to-br from-white to-violet-50 border-violet-200 max-h-[90vh] overflow-y-auto p-6 sm:p-8">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2">
-              <Sparkles className="text-violet-500" size={24} />
-              Create New Budget
-            </DialogTitle>
-            <DialogDescription className="mt-4 space-y-6">
-              {/* Emoji Picker */}
-              <div className="text-center relative">
-                <p className="text-gray-600 mb-4">Choose an icon for your budget</p>
-                <Button
-                  variant="outline"
-                  className="text-3xl h-16 w-16 rounded-2xl border-2 border-violet-200 hover:border-violet-400 hover:bg-violet-50 transition-all duration-300 hover:scale-110"
-                  onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
-                >
-                  {emojiIcon}
-                </Button>
-                {openEmojiPicker && (
-                  <div className="absolute z-50 top-20 left-1/2 -translate-x-1/2 shadow-2xl rounded-2xl">
-                    <EmojiPicker
-                      onEmojiClick={(e) => {
-                        setEmojiIcon(e.emoji);
-                        setOpenEmojiPicker(false);
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
+      <DialogContent className="sm:max-w-md w-full bg-white border-0 rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto p-6">
+        <DialogHeader className="mb-2">
+          <DialogTitle className="text-2xl font-black text-gray-900 flex items-center gap-2.5">
+            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+              <Wallet size={18} className="text-white" />
+            </div>
+            Create Budget
+          </DialogTitle>
+        </DialogHeader>
 
-              {/* Budget Name */}
-              <div className="space-y-2">
-                <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Budget Name</h2>
-                <Input
-                  placeholder="Enter Budget Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-12 border-violet-200 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
-                />
-              </div>
-
-              {/* Budget Amount */}
-              <div className="space-y-2">
-                <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Budget Amount</h2>
-                <Input
-                  type="number"
-                  placeholder="Enter Budget Amount"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="h-12 border-violet-200 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
-                />
-              </div>
-
-              {/* Parent Budget */}
-              <div className="space-y-2">
-                <h2 className="text-gray-800 font-bold text-sm uppercase tracking-wide">Parent Budget</h2>
-                <select
-                  value={parentId}
-                  onChange={(e) => setParentId(e.target.value)}
-                  className="w-full border border-violet-200 p-3 rounded-xl text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 bg-white h-12"
-                >
-                  <option value="">Make this a Parent Budget</option>
-                  {parentOptions.map((parent) => (
-                    <option key={parent.id} value={parent.id} className="text-gray-700">
-                      Child of {parent.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Preview */}
-              {(name || amount) && (
-                <div className="mt-6 p-4 bg-gradient-to-r from-violet-100 to-purple-100 rounded-xl border border-violet-200">
-                  <h3 className="text-sm font-bold text-violet-800 mb-3 flex items-center gap-2">
-                    <Target size={16} />
-                    Budget Preview
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl bg-white p-2 rounded-lg shadow-sm">{emojiIcon}</div>
-                    <div>
-                      <p className="font-semibold text-gray-800">{name || "Budget Name"}</p>
-                      <p className="text-violet-600 font-bold">₹{amount || "0"}</p>
-                    </div>
-                  </div>
+        <div className="space-y-5 mt-2">
+          {/* Emoji picker */}
+          <div className="flex flex-col items-center gap-3">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider self-start">Choose Icon</p>
+            <div className="relative">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                className="w-20 h-20 text-4xl bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-3xl flex items-center justify-center shadow-sm hover:border-blue-300 hover:shadow-md transition-all duration-200"
+                onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
+              >
+                {emojiIcon}
+              </motion.button>
+              {openEmojiPicker && (
+                <div className="absolute z-50 top-24 left-1/2 -translate-x-1/2 shadow-2xl rounded-2xl">
+                  <EmojiPicker
+                    onEmojiClick={(e) => {
+                      setEmojiIcon(e.emoji);
+                      setOpenEmojiPicker(false);
+                    }}
+                  />
                 </div>
               )}
-            </DialogDescription>
-          </DialogHeader>
+            </div>
+          </div>
 
-          <DialogFooter className="sm:justify-start">
-            <DialogClose asChild>
-              <Button
-                disabled={!(name && amount)}
-                onClick={onCreateBudget}
-                className="w-full mt-6 h-12 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          {/* Budget Name */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Budget Name</label>
+            <Input
+              placeholder="e.g. Monthly Groceries"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="h-12 rounded-2xl border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 text-sm font-semibold"
+            />
+          </div>
+
+          {/* Budget Amount */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Amount</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">₹</span>
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="h-12 rounded-2xl border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 text-sm font-semibold pl-8"
+              />
+            </div>
+          </div>
+
+          {/* Parent Budget */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Parent Budget (optional)</label>
+            <div className="relative">
+              <select
+                value={parentId}
+                onChange={(e) => setParentId(e.target.value)}
+                className="w-full h-12 border border-gray-200 bg-gray-50 rounded-2xl px-4 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 appearance-none transition-all duration-200"
               >
-                <Plus size={18} className="mr-2" />
-                Create Budget
-              </Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+                <option value="">Standalone budget</option>
+                {parentOptions.map((p) => (
+                  <option key={p.id} value={p.id}>Child of: {p.name}</option>
+                ))}
+              </select>
+              <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+            </div>
+          </div>
+
+          {/* Preview */}
+          {(name || amount) && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-4"
+            >
+              <p className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-3">Preview</p>
+              <div className="flex items-center gap-3">
+                <div className="text-2xl w-12 h-12 bg-white rounded-2xl border border-blue-100 flex items-center justify-center shadow-sm">{emojiIcon}</div>
+                <div>
+                  <p className="font-black text-gray-900">{name || "Budget Name"}</p>
+                  <p className="text-blue-600 font-bold text-sm">₹{amount || "0"}</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        <DialogFooter className="mt-6">
+          <DialogClose asChild>
+            <Button variant="ghost" className="rounded-2xl text-gray-500 font-bold hover:bg-gray-100">
+              Cancel
+            </Button>
+          </DialogClose>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} className="flex-1">
+            <Button
+              disabled={!(name && amount)}
+              onClick={onCreateBudget}
+              className="w-full h-12 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-black rounded-2xl shadow-lg shadow-blue-500/25 text-base"
+            >
+              <Plus size={18} className="mr-2" />
+              Create Budget
+            </Button>
+          </motion.div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

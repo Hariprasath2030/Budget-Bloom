@@ -113,13 +113,13 @@ const EditableCell = ({ getValue, row, column, table }) => {
 
   return (
     <div
-      className="flex items-center justify-between group cursor-pointer hover:bg-gradient-to-r hover:from-violet-50 hover:to-purple-50 p-2 rounded-lg transition-all duration-200"
+      className="flex items-center justify-between group cursor-pointer hover:bg-blue-50 p-1.5 rounded-xl transition-all duration-150"
       onClick={() => setIsEditing(true)}
     >
-      <span className="flex-1 font-medium">{value}</span>
+      <span className="flex-1 font-medium text-sm">{value}</span>
       <Edit3
-        size={14}
-        className="opacity-0 group-hover:opacity-100 text-violet-400 transition-all duration-200"
+        size={13}
+        className="opacity-0 group-hover:opacity-100 text-blue-400 transition-all duration-200"
       />
     </div>
   );
@@ -152,7 +152,7 @@ function EnhancedDataTable({
             type="checkbox"
             checked={table.getIsAllPageRowsSelected()}
             onChange={(e) => table.toggleAllPageRowsSelected(e.target.checked)}
-            className="rounded border-violet-300 text-violet-600 focus:ring-violet-500 w-4 h-4"
+            className="rounded border-blue-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
           />
         ),
         cell: ({ row }) => (
@@ -160,7 +160,7 @@ function EnhancedDataTable({
             type="checkbox"
             checked={row.getIsSelected()}
             onChange={(e) => row.toggleSelected(e.target.checked)}
-            className="rounded border-violet-300 text-violet-600 focus:ring-violet-500 w-4 h-4"
+            className="rounded border-blue-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
           />
         ),
         enableSorting: false,
@@ -320,17 +320,16 @@ function EnhancedDataTable({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-xl">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div className="relative">
-            <div className="absolute -top-2 -left-2 w-8 h-8 bg-white/20 rounded-full animate-pulse"></div>
-            <h2 className="text-2xl lg:text-3xl font-bold relative z-10">{title}</h2>
-            <p className="text-violet-100 mt-2 text-sm lg:text-base">
+      <div className="bg-white border border-gray-100 rounded-3xl p-5 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-black text-gray-900">{title}</h2>
+            <p className="text-gray-400 text-sm font-medium mt-0.5">
               {selectedData.length > 0
-                ? `${selectedData.length} of ${data.length} rows selected`
-                : `${data.length} total records`}
+                ? `${selectedData.length} of ${data.length} selected`
+                : `${data.length} records`}
             </p>
           </div>
 
@@ -338,26 +337,29 @@ function EnhancedDataTable({
             <div className="flex flex-wrap gap-2">
               <Button
                 onClick={() => handleExport("pdf")}
-                className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
+                variant="outline"
+                className="rounded-2xl border-gray-200 text-gray-600 hover:bg-red-50 hover:border-red-200 hover:text-red-600 text-xs font-bold h-9"
                 size="sm"
               >
-                <FileText size={16} className="mr-2" />
+                <FileText size={14} className="mr-1.5" />
                 PDF
               </Button>
               <Button
                 onClick={() => handleExport("excel")}
-                className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
+                variant="outline"
+                className="rounded-2xl border-gray-200 text-gray-600 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-600 text-xs font-bold h-9"
                 size="sm"
               >
-                <FileSpreadsheet size={16} className="mr-2" />
+                <FileSpreadsheet size={14} className="mr-1.5" />
                 Excel
               </Button>
               <Button
                 onClick={() => handleExport("csv")}
-                className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm transition-all duration-300 hover:scale-105"
+                variant="outline"
+                className="rounded-2xl border-gray-200 text-gray-600 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 text-xs font-bold h-9"
                 size="sm"
               >
-                <File size={16} className="mr-2" />
+                <File size={14} className="mr-1.5" />
                 CSV
               </Button>
             </div>
@@ -366,39 +368,37 @@ function EnhancedDataTable({
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg">
-        <div className="flex flex-col lg:flex-row gap-4">
+      <div className="bg-white rounded-3xl border border-gray-100 p-4 shadow-sm">
+        <div className="flex flex-col lg:flex-row gap-3">
           {showSearch && (
             <div className="flex-1">
               <div className="relative">
                 <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-violet-400"
-                  size={20}
+                  className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={16}
                 />
                 <Input
-                  placeholder="Search across all columns..."
+                  placeholder="Search records..."
                   value={globalFilter ?? ""}
                   onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="pl-10 h-12 border-violet-200 focus:border-violet-400 focus:ring-violet-400 rounded-xl"
+                  className="pl-9 h-11 border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-blue-400/20 rounded-2xl text-sm font-medium"
                 />
               </div>
             </div>
           )}
 
           {showDateFilter && onDateRangeChange && (
-            <div className="flex items-center gap-2 bg-gradient-to-r from-violet-50 to-purple-50 px-4 py-2 rounded-xl">
-              <Calendar className="text-violet-500" size={20} />
-              <span className="text-sm text-violet-700 whitespace-nowrap font-medium">
-                Set Date Range
-              </span>
+            <div className="flex items-center gap-2 bg-blue-50 border border-blue-100 px-4 py-2.5 rounded-2xl">
+              <Calendar className="text-blue-500" size={16} />
+              <span className="text-sm text-blue-700 whitespace-nowrap font-bold">Set Date Range</span>
             </div>
           )}
         </div>
 
         {selectedData.length > 0 && (
-          <div className="mt-4 p-4 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border border-violet-200">
+          <div className="mt-3 p-3 bg-blue-50 rounded-2xl border border-blue-100">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-sm text-violet-700 font-medium">
+              <span className="text-sm text-blue-700 font-bold">
                 {selectedData.length} rows selected
               </span>
               <div className="flex gap-2">
@@ -406,17 +406,17 @@ function EnhancedDataTable({
                   size="sm"
                   variant="outline"
                   onClick={() => setRowSelection({})}
-                  className="text-violet-600 border-violet-200 hover:bg-violet-50"
+                  className="text-gray-600 border-gray-200 hover:bg-gray-50 rounded-xl text-xs font-bold"
                 >
-                  Clear Selection
+                  Clear
                 </Button>
                 <Button
                   size="sm"
                   onClick={() => handleExport("pdf")}
-                  className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white"
+                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold"
                 >
-                  <Download size={14} className="mr-1" />
-                  Export Selected
+                  <Download size={13} className="mr-1" />
+                  Export
                 </Button>
               </div>
             </div>
@@ -424,16 +424,16 @@ function EnhancedDataTable({
         )}
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden">
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-violet-100 via-purple-100 to-indigo-100 border-b border-violet-200">
+            <thead className="bg-gray-50 border-b border-gray-100">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-4 lg:px-6 py-4 text-left text-sm font-bold text-violet-800 cursor-pointer hover:bg-violet-200 transition-all duration-200"
+                      className="px-4 py-3.5 text-left text-xs font-black text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors duration-150"
                       onClick={
                         header.column.getCanSort()
                           ? header.column.getToggleSortingHandler()
@@ -453,16 +453,16 @@ function EnhancedDataTable({
                               size={12}
                               className={`${
                                 header.column.getIsSorted() === "asc"
-                                  ? "text-violet-600"
-                                  : "text-gray-400"
+                                  ? "text-blue-600"
+                                  : "text-gray-300"
                               }`}
                             />
                             <ChevronDown
                               size={12}
                               className={`${
                                 header.column.getIsSorted() === "desc"
-                                  ? "text-violet-600"
-                                  : "text-gray-400"
+                                  ? "text-blue-600"
+                                  : "text-gray-300"
                               } -mt-1`}
                             />
                           </div>
@@ -473,27 +473,17 @@ function EnhancedDataTable({
                 </tr>
               ))}
             </thead>
-            <tbody className="divide-y divide-violet-100">
+            <tbody className="divide-y divide-gray-50">
               {table.getRowModel().rows.map((row, index) => (
                 <tr
                   key={row.id}
-                  className={`hover:bg-gradient-to-r hover:from-violet-50 hover:to-purple-50 transition-all duration-200 ${
-                    row.getIsSelected()
-                      ? "bg-gradient-to-r from-violet-100 to-purple-100"
-                      : index % 2 === 0
-                      ? "bg-white"
-                      : "bg-gray-50/50"
+                  className={`hover:bg-blue-50/40 transition-colors duration-150 ${
+                    row.getIsSelected() ? "bg-blue-50" : index % 2 === 0 ? "bg-white" : "bg-gray-50/30"
                   }`}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className="px-4 lg:px-6 py-4 text-sm text-gray-900"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                    <td key={cell.id} className="px-4 py-3.5 text-sm text-gray-900">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
                 </tr>
@@ -502,62 +492,52 @@ function EnhancedDataTable({
           </table>
         </div>
 
-        <div className="bg-gradient-to-r from-violet-50 to-purple-50 px-4 lg:px-6 py-4 border-t border-violet-200">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-sm text-violet-700">
+        <div className="bg-gray-50/60 border-t border-gray-100 px-4 py-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-sm text-gray-500 font-medium">
               <span>Show</span>
               <select
                 value={table.getState().pagination.pageSize}
                 onChange={(e) => table.setPageSize(Number(e.target.value))}
-                className="border border-violet-300 rounded-lg px-3 py-1 text-sm bg-white focus:ring-2 focus:ring-violet-400"
+                className="border border-gray-200 rounded-xl px-2 py-1 text-sm bg-white focus:ring-2 focus:ring-blue-400 font-semibold text-gray-700"
               >
                 {[10, 20, 30, 40, 50].map((pageSize) => (
-                  <option key={pageSize} value={pageSize}>
-                    {pageSize}
-                  </option>
+                  <option key={pageSize} value={pageSize}>{pageSize}</option>
                 ))}
               </select>
-              <span>entries</span>
+              <span>per page</span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
-                className="border-violet-200 text-violet-600 hover:bg-violet-50"
+                className="border-gray-200 text-gray-600 hover:bg-gray-100 rounded-xl text-xs font-bold h-8 px-3"
               >
-                Previous
+                Prev
               </Button>
 
               <div className="flex items-center gap-1">
                 {Array.from({ length: table.getPageCount() }, (_, i) => i + 1)
                   .filter((page) => {
                     const current = table.getState().pagination.pageIndex + 1;
-                    return (
-                      page === 1 ||
-                      page === table.getPageCount() ||
-                      (page >= current - 1 && page <= current + 1)
-                    );
+                    return page === 1 || page === table.getPageCount() || (page >= current - 1 && page <= current + 1);
                   })
                   .map((page, index, array) => {
                     if (index > 0 && array[index - 1] !== page - 1) {
                       return (
                         <React.Fragment key={`ellipsis-${page}`}>
-                          <span className="px-2 text-violet-400">...</span>
+                          <span className="px-1 text-gray-400 text-xs">...</span>
                           <Button
-                            variant={
-                              table.getState().pagination.pageIndex + 1 === page
-                                ? "default"
-                                : "outline"
-                            }
+                            variant={table.getState().pagination.pageIndex + 1 === page ? "default" : "outline"}
                             size="sm"
                             onClick={() => table.setPageIndex(page - 1)}
-                            className={`w-8 h-8 p-0 ${
+                            className={`w-8 h-8 p-0 rounded-xl text-xs font-bold ${
                               table.getState().pagination.pageIndex + 1 === page
-                                ? "bg-gradient-to-r from-violet-600 to-purple-600"
-                                : "border-violet-200 text-violet-600 hover:bg-violet-50"
+                                ? "bg-blue-600 text-white border-0"
+                                : "border-gray-200 text-gray-600 hover:bg-gray-100"
                             }`}
                           >
                             {page}
@@ -568,17 +548,13 @@ function EnhancedDataTable({
                     return (
                       <Button
                         key={page}
-                        variant={
-                          table.getState().pagination.pageIndex + 1 === page
-                            ? "default"
-                            : "outline"
-                        }
+                        variant={table.getState().pagination.pageIndex + 1 === page ? "default" : "outline"}
                         size="sm"
                         onClick={() => table.setPageIndex(page - 1)}
-                        className={`w-8 h-8 p-0 ${
+                        className={`w-8 h-8 p-0 rounded-xl text-xs font-bold ${
                           table.getState().pagination.pageIndex + 1 === page
-                            ? "bg-gradient-to-r from-violet-600 to-purple-600"
-                            : "border-violet-200 text-violet-600 hover:bg-violet-50"
+                            ? "bg-blue-600 text-white border-0"
+                            : "border-gray-200 text-gray-600 hover:bg-gray-100"
                         }`}
                       >
                         {page}
@@ -592,15 +568,14 @@ function EnhancedDataTable({
                 size="sm"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
-                className="border-violet-200 text-violet-600 hover:bg-violet-50"
+                className="border-gray-200 text-gray-600 hover:bg-gray-100 rounded-xl text-xs font-bold h-8 px-3"
               >
                 Next
               </Button>
             </div>
 
-            <div className="text-sm text-violet-700 font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
+            <div className="text-xs text-gray-400 font-semibold">
+              Page {table.getState().pagination.pageIndex + 1} / {table.getPageCount()}
             </div>
           </div>
         </div>
