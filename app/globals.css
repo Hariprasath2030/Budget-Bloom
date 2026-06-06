@@ -278,3 +278,14 @@
 
 /* Pressed states for mobile */
 .touch-scale:active { transform: scale(0.96); transition: transform 0.1s ease; }
+
+/* Hide scrollbar but keep scroll functionality */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* Mobile bottom sheet animation */
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.animate-sheet-up { animation: sheet-up 0.35s cubic-bezier(0.32, 0.72, 0, 1) forwards; }
