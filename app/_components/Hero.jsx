@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { TrendingUp, Shield, Zap, BarChart3, ArrowRight, Star, CheckCircle, Smartphone } from "lucide-react";
+import { TrendingUp, Shield, Zap, ChartBar as BarChart3, ArrowRight, Star, CircleCheck as CheckCircle, Smartphone } from "lucide-react";
 import img from "../../public/exlogo.jpg";
 
 const features = [

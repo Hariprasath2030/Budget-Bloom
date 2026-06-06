@@ -2,18 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutGrid,
-  PiggyBank,
-  ReceiptText,
-  ShieldCheck,
-  Home,
-  TrendingUp,
-  Sparkles,
-  Zap,
-  Menu,
-  X,
-} from "lucide-react";
+import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Chrome as Home, TrendingUp, Sparkles, Zap, Menu, X } from "lucide-react";
 import Image from "next/image";
 import img from "../../../public/exlogo.jpg";
 import { motion, AnimatePresence } from "framer-motion";

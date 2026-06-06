@@ -8,22 +8,7 @@ import {
   getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import {
-  Search,
-  Download,
-  FileText,
-  FileSpreadsheet,
-  File,
-  Edit3,
-  Check,
-  X,
-  ChevronUp,
-  ChevronDown,
-  Filter,
-  Calendar,
-  Trash2,
-  Plus,
-} from "lucide-react";
+import { Search, Download, FileText, FileSpreadsheet, File, CreditCard as Edit3, Check, X, ChevronUp, ChevronDown, Filter, Calendar, Trash2, Plus } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../@/components/ui/input";
 import {
