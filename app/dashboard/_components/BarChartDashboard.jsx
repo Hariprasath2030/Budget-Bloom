@@ -1,7 +1,7 @@
 import React from 'react'
 import { BarChart, Bar, Legend, Tooltip, XAxis, YAxis, ResponsiveContainer } from 'recharts'
 import { motion } from 'framer-motion'
-import { BarChart3 } from 'lucide-react'
+import { ChartBar as BarChart3 } from 'lucide-react'
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
